@@ -1,0 +1,20 @@
+server:
+  port: 8081
+mysql:
+  username: root
+  password: cmmtpnx1
+  host: 127.0.0.1
+  port: 3306
+  dbname: shopdevgo
+  maxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifeTime: 3600
+security:
+  key: tuulee
+log:
+  logLevel: debug
+  fileLogName: "./storage/logs/log-%s.txt"
+  maxSize:    500
+  maxBackups: 213
+  maxAge:     20
+  compress:   true

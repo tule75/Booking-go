@@ -1,0 +1,8 @@
+{"level":"INFO","Time":"2025-02-24T14:37:28.377+0700","msg":"hello world"}
+{"level":"ERROR","Time":"2025-02-24T14:37:28.377+0700","msg":"Lỗi nè"}
+{"level":"INFO","Time":"2025-02-24T14:38:58.725+0700","msg":"hello world"}
+{"level":"ERROR","Time":"2025-02-24T14:38:58.726+0700","msg":"Lỗi nè"}
+{"level":"INFO","Time":"2025-02-24T16:55:23.491+0700","msg":"hello world"}
+{"level":"ERROR","Time":"2025-02-24T16:55:23.492+0700","msg":"Lỗi nè"}
+{"level":"INFO","Time":"2025-02-24T16:55:36.885+0700","msg":"hello world"}
+{"level":"ERROR","Time":"2025-02-24T16:55:36.885+0700","msg":"Lỗi nè"}
