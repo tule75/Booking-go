@@ -1,50 +1,40 @@
 package initialize
 
 import (
-	"ecommerce_go/internal/controller"
-	"ecommerce_go/internal/middleware"
-	"fmt"
+	"ecommerce_go/global"
+	Router "ecommerce_go/internal/router"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InitRouter() *gin.Engine {
-	r := gin.Default()
+	var r *gin.Engine
 
-	r.Use(middleware.AuthenticationMiddleware())
+	if global.Config.Server.Mode == "dev" {
+		gin.SetMode(gin.DebugMode)
+		gin.ForceConsoleColor()
+		r = gin.Default()
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+		r = gin.New()
+	}
 
-	r.GET("/ping", Pong)
+	manageRouter := Router.RouterAppGroup.AdminGroupRouter
+	userRouter := Router.RouterAppGroup.UserGroupRouter
 
-	v1 := r.Group("/v1/2025")
+	MainGroup := r.Group("/v1/2025")
 	{
-		v1.GET("/", func(c *gin.Context) {
+		MainGroup.GET("/", func(c *gin.Context) {
 			c.JSON(200, gin.H{
 				"message": "Hello world",
 			})
 		})
-
-		v1.GET("/:name", GetName)
+		userRouter.InitUserRouter(MainGroup)
 	}
-
-	u := r.Group("/users")
 	{
-		u.GET("/info", controller.NewUserController().GetUserInfo)
-		u.GET("/login", controller.NewUserController().CheckEmail)
+		manageRouter.InitUserRouter(MainGroup)
+		manageRouter.InitAdminRouter(MainGroup)
 	}
 
 	return r
-}
-
-func Pong(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "pong",
-	})
-}
-
-func GetName(c *gin.Context) {
-	name := c.Param("name")
-
-	c.JSON(200, gin.H{
-		"message": fmt.Sprintf("Tên: %s", name),
-	})
 }

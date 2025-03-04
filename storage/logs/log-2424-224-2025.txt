@@ -1,2 +1,0 @@
-{"level":"INFO","Time":"2025-02-24T17:46:57.988+0700","caller":"initialize/run.go:14","msg":"Config ok roif: ","Ok":"success"}
-{"level":"INFO","Time":"2025-02-24T17:56:42.363+0700","caller":"initialize/run.go:14","msg":"Config ok roif: ","Ok":"success"}

@@ -1,11 +1,16 @@
 package setting
 
 type Config struct {
-	Server struct {
-		Port int `json:"port"`
-	} `mapstructure:"server"`
+	Server      Server       `mapstructure:"server"`
 	Mysql       MySQLSetting `mapstructure:"mysql"`
 	LogSettings LogSetting   `mapstructure:"log"`
+	Redis       RedisSetting `mapstructure:"redis"`
+	Kafka       KafkaSetting `mapstructure:"kafka"`
+}
+
+type Server struct {
+	Port int    `json:"port"`
+	Mode string `json:"mode"`
 }
 
 type MySQLSetting struct {
@@ -26,4 +31,18 @@ type LogSetting struct {
 	MaxSize     int    `mapstructure:"maxSize"`
 	MaxAge      int    `mapstructure:"maxAge"`
 	Compress    bool   `mapstructure:"compress"`
+}
+
+type RedisSetting struct {
+	Addr     string `mapstructure:"addr"`
+	UserName string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	Db       int    `mapstructure:"db"`
+	PoolSize int    `mapstructure:"poolSize"`
+}
+
+type KafkaSetting struct {
+	Addr    string `mapstructure:"addr"`
+	Topic   string `mapstructure:"topic"`
+	GroupID int    `mapstructure:"groupid"`
 }

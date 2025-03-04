@@ -9,9 +9,9 @@ import (
 
 func LoadConfig() {
 	viper := viper.New()
-	viper.AddConfigPath("./configs/")  // path to config folder
-	viper.SetConfigName("development") // config file name
-	viper.SetConfigType("yaml")        // config file type
+	viper.AddConfigPath("./config/") // path to config folder
+	viper.SetConfigName("local")     // config file name
+	viper.SetConfigType("yaml")      // config file type
 
 	err := viper.ReadInConfig()
 	if err != nil {

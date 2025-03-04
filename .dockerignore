@@ -1,0 +1,9 @@
+*.git
+*.md
+.git
+node_modules
+tmp
+build
+dist
+vendor
+data
