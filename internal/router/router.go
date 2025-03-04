@@ -1,7 +1,6 @@
 package Router
 
 import (
-	"ecommerce_go/internal/controller"
 	"ecommerce_go/internal/middleware"
 	"fmt"
 
@@ -26,11 +25,11 @@ func NewRouter() *gin.Engine {
 		v1.GET("/:name", GetName)
 	}
 
-	u := r.Group("/users")
-	{
-		u.GET("/info", controller.NewUserController().GetUserInfo)
-		u.GET("/login", controller.NewUserController().CheckEmail)
-	}
+	// u := r.Group("/users")
+	// {
+	// 	u.GET("/info", controller.NewUserController().GetUserInfo)
+	// 	u.GET("/login", controller.NewUserController().CheckEmail)
+	// }
 
 	return r
 }

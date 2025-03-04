@@ -6,6 +6,7 @@ type Config struct {
 	LogSettings LogSetting   `mapstructure:"log"`
 	Redis       RedisSetting `mapstructure:"redis"`
 	Kafka       KafkaSetting `mapstructure:"kafka"`
+	Email       EmailSetting `mapstructure:"email"`
 }
 
 type Server struct {
@@ -45,4 +46,9 @@ type KafkaSetting struct {
 	Addr    string `mapstructure:"addr"`
 	Topic   string `mapstructure:"topic"`
 	GroupID int    `mapstructure:"groupid"`
+}
+
+type EmailSetting struct {
+	SMTPUsername string `mapstructure:"smtpUsername"`
+	SMTPPassword string `mapstructure:"smtpPassword"`
 }

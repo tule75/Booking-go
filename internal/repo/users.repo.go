@@ -1,8 +1,18 @@
 package repo
 
+type IUserRepo interface {
+	GetUserByEmail(email string) bool
+	GetUserInfo() string
+}
+
 type UserRepo struct{}
 
-func NewUserRepo() *UserRepo {
+// Register implements IUserRepo.
+func (ur *UserRepo) GetUserByEmail(email string) bool {
+	return false
+}
+
+func NewUserRepo() IUserRepo {
 	return &UserRepo{}
 }
 

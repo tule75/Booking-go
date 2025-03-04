@@ -4,7 +4,7 @@ server:
 mysql:
   username: root
   password: cmmtpnx1
-  host: mysql_container
+  host: 127.0.0.1 #mysql_container
   port: 3307
   dbname: shopdevgo
   maxIdleConns: 10
@@ -25,3 +25,6 @@ redis:
   addr: "redis-17965.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com:17965"
   db: 0
   poolSize: 10
+email:
+  SMTPUsername: ERP.nhacungcap1@gmail.com
+  SMTPPassword: mhzoeojbvpimgjvj

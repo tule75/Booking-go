@@ -5,6 +5,7 @@ const (
 	FalseEmailResponseCode    = 20001
 	FalsePasswordResponseCode = 20002
 	InvalidTokenResponseCode  = 20003
+	ErrorBindingParam         = 30001
 )
 
 var msg = map[int]string{
@@ -12,4 +13,5 @@ var msg = map[int]string{
 	FalseEmailResponseCode:    "False Email",
 	FalsePasswordResponseCode: "False Password",
 	InvalidTokenResponseCode:  "Invalid Token response",
+	ErrorBindingParam:         "Error Binding parameter",
 }
