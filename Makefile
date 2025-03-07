@@ -3,6 +3,9 @@ GOOSE_DBSTRING = $(STR_MYSQL)"root:cmmtpnx1@tcp(127.0.0.1:3307)/bookinggo"
 GOOSE_MIGRATION_DIR = sql/schema
 GOOSE_DRIVER = mysql
 
+docker_build:
+	docker compose up -d --build 
+	docker compose ps 
 
 dev: 
 	go run ./cmd/${APP_NAME}/main.go
@@ -19,6 +22,9 @@ docker_up:
 docker_down: 
 	docker compose down
 
+create_migration:
+	@goose -dir=$(GOOSE_MIGRATION_DIR) create $(name) sql
+
 upse:
 	@cmd /C "set GOOSE_DRIVER=$(GOOSE_DRIVER)&& set GOOSE_DBSTRING=$(GOOSE_DBSTRING)&& goose -dir=$(GOOSE_MIGRATION_DIR) up"
 
@@ -31,6 +37,9 @@ resetse:
 sqlgen:
 	@powershell -Command "docker run --rm -v \"$${PWD}:/src\" -w /src sqlc/sqlc generate"
 
-.PHONY: dev run downse upse resetse docker_up docker_down
+wiregen:
+	cd internal\wire && wire
+
+.PHONY: dev run downse upse resetse docker_up docker_down wiregen
 
 .PHONY: air

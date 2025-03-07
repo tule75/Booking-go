@@ -1,4 +1,4 @@
--- name: CreateBooking :exec
+-- name: CreateBooking :execresult
 INSERT INTO bookings (id, user_id, property_id, room_id, check_in, check_out, guests, total_price, status)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 

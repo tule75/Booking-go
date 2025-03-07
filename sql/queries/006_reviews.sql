@@ -1,4 +1,4 @@
--- name: CreateReview :exec
+-- name: CreateReview :execresult
 INSERT INTO reviews (id, user_id, property_id, rating, comment)
 VALUES (?, ?, ?, ?, ?);
 

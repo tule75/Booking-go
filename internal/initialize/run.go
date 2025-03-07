@@ -16,6 +16,7 @@ func Run() {
 	InitMySQLC()
 	InitRedis()
 	InitKafka()
+	InitServices()
 	r := InitRouter()
 
 	r.Run(fmt.Sprintf(":%v", global.Config.Server.Port))

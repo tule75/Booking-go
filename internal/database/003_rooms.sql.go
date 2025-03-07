@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-const createRoom = `-- name: CreateRoom :exec
+const createRoom = `-- name: CreateRoom :execresult
 INSERT INTO rooms (id, property_id, name, price, max_guests, is_available)
 VALUES (?, ?, ?, ?, ?, ?)
 `
@@ -24,8 +24,8 @@ type CreateRoomParams struct {
 	IsAvailable sql.NullBool
 }
 
-func (q *Queries) CreateRoom(ctx context.Context, arg CreateRoomParams) error {
-	_, err := q.db.ExecContext(ctx, createRoom,
+func (q *Queries) CreateRoom(ctx context.Context, arg CreateRoomParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createRoom,
 		arg.ID,
 		arg.PropertyID,
 		arg.Name,
@@ -33,7 +33,6 @@ func (q *Queries) CreateRoom(ctx context.Context, arg CreateRoomParams) error {
 		arg.MaxGuests,
 		arg.IsAvailable,
 	)
-	return err
 }
 
 const getRoomByID = `-- name: GetRoomByID :one

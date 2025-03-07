@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-const createReview = `-- name: CreateReview :exec
+const createReview = `-- name: CreateReview :execresult
 INSERT INTO reviews (id, user_id, property_id, rating, comment)
 VALUES (?, ?, ?, ?, ?)
 `
@@ -23,15 +23,14 @@ type CreateReviewParams struct {
 	Comment    sql.NullString
 }
 
-func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) error {
-	_, err := q.db.ExecContext(ctx, createReview,
+func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createReview,
 		arg.ID,
 		arg.UserID,
 		arg.PropertyID,
 		arg.Rating,
 		arg.Comment,
 	)
-	return err
 }
 
 const getReviewByID = `-- name: GetReviewByID :one

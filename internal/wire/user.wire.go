@@ -5,7 +5,7 @@ package wire
 import (
 	"ecommerce_go/internal/controller"
 	"ecommerce_go/internal/repo"
-	"ecommerce_go/internal/service"
+	service "ecommerce_go/internal/service/implement"
 
 	"github.com/google/wire"
 )
@@ -14,7 +14,7 @@ func InitUserRouterHanlder() (controller.IUserController, error) {
 	wire.Build(
 		repo.NewUserRepo,
 		repo.NewUserAuthRepo,
-		service.NewUserService,
+		service.NewUserLogin,
 		controller.NewUserController,
 	)
 

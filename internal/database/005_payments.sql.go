@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-const createPayment = `-- name: CreatePayment :exec
+const createPayment = `-- name: CreatePayment :execresult
 INSERT INTO payments (id, booking_id, user_id, amount, payment_method, status, stripe_payment_intent_id)
 VALUES (?, ?, ?, ?, ?, ?, ?)
 `
@@ -25,8 +25,8 @@ type CreatePaymentParams struct {
 	StripePaymentIntentID sql.NullString
 }
 
-func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) error {
-	_, err := q.db.ExecContext(ctx, createPayment,
+func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createPayment,
 		arg.ID,
 		arg.BookingID,
 		arg.UserID,
@@ -35,7 +35,6 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) er
 		arg.Status,
 		arg.StripePaymentIntentID,
 	)
-	return err
 }
 
 const getPaymentByID = `-- name: GetPaymentByID :one

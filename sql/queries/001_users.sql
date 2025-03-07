@@ -1,6 +1,6 @@
--- name: CreateUser :exec
-INSERT INTO `users` (id, full_name, email, password, phone, role)
-VALUES (?, ?, ?, ?, ?, ?);
+-- name: CreateUser :execresult
+INSERT INTO `users` (id, full_name, email, password, phone, role, salt)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
 -- name: GetUserByID :one
 SELECT 
@@ -10,7 +10,8 @@ SELECT
   `users`.password,
   `users`.phone,
   `users`.role,
-  `users`.created_at
+  `users`.created_at,
+  `users`.salt
 FROM `users`
 WHERE `users`.id = ? AND `users`.deleted_at IS NULL;
 
@@ -22,7 +23,8 @@ SELECT
   `users`.password,
   `users`.phone,
   `users`.role,
-  `users`.created_at
+  `users`.created_at,
+  `users`.salt
 FROM `users`
 WHERE `users`.email = ? AND `users`.deleted_at IS NULL;
 
@@ -33,3 +35,6 @@ WHERE id = ? AND deleted_at IS NULL;
 
 -- name: SoftDeleteUser :exec
 UPDATE `users` SET deleted_at = NOW() WHERE id = ?;
+
+-- name: CheckUserExists :one
+SELECT COUNT(*) FROM `users` where email = ?;

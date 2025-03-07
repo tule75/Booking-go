@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-const createNotification = `-- name: CreateNotification :exec
+const createNotification = `-- name: CreateNotification :execresult
 INSERT INTO notifications (id, user_id, message, is_read)
 VALUES (?, ?, ?, ?)
 `
@@ -22,14 +22,13 @@ type CreateNotificationParams struct {
 	IsRead  sql.NullBool
 }
 
-func (q *Queries) CreateNotification(ctx context.Context, arg CreateNotificationParams) error {
-	_, err := q.db.ExecContext(ctx, createNotification,
+func (q *Queries) CreateNotification(ctx context.Context, arg CreateNotificationParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createNotification,
 		arg.ID,
 		arg.UserID,
 		arg.Message,
 		arg.IsRead,
 	)
-	return err
 }
 
 const getNotificationByID = `-- name: GetNotificationByID :one

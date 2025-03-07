@@ -1,4 +1,4 @@
--- name: CreateRoom :exec
+-- name: CreateRoom :execresult
 INSERT INTO rooms (id, property_id, name, price, max_guests, is_available)
 VALUES (?, ?, ?, ?, ?, ?);
 

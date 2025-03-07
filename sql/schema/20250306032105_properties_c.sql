@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS `properties` (
-    id CHAR(36) PRIMARY KEY,
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     owner_id CHAR(36) NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,

@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS `user_cards` (
-    id CHAR(36) PRIMARY KEY,
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     user_id CHAR(36) NOT NULL,
     stripe_customer_id VARCHAR(255) NOT NULL,
     stripe_card_id VARCHAR(255) NOT NULL,

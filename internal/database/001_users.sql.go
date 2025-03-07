@@ -10,9 +10,20 @@ import (
 	"database/sql"
 )
 
-const createUser = `-- name: CreateUser :exec
-INSERT INTO ` + "`" + `users` + "`" + ` (id, full_name, email, password, phone, role)
-VALUES (?, ?, ?, ?, ?, ?)
+const checkUserExists = `-- name: CheckUserExists :one
+SELECT COUNT(*) FROM ` + "`" + `users` + "`" + ` where email = ?
+`
+
+func (q *Queries) CheckUserExists(ctx context.Context, email string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, checkUserExists, email)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const createUser = `-- name: CreateUser :execresult
+INSERT INTO ` + "`" + `users` + "`" + ` (id, full_name, email, password, phone, role, salt)
+VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateUserParams struct {
@@ -22,18 +33,19 @@ type CreateUserParams struct {
 	Password string
 	Phone    sql.NullString
 	Role     NullUsersRole
+	Salt     string
 }
 
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
-	_, err := q.db.ExecContext(ctx, createUser,
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createUser,
 		arg.ID,
 		arg.FullName,
 		arg.Email,
 		arg.Password,
 		arg.Phone,
 		arg.Role,
+		arg.Salt,
 	)
-	return err
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
@@ -44,7 +56,8 @@ SELECT
   ` + "`" + `users` + "`" + `.password,
   ` + "`" + `users` + "`" + `.phone,
   ` + "`" + `users` + "`" + `.role,
-  ` + "`" + `users` + "`" + `.created_at
+  ` + "`" + `users` + "`" + `.created_at,
+  ` + "`" + `users` + "`" + `.salt
 FROM ` + "`" + `users` + "`" + `
 WHERE ` + "`" + `users` + "`" + `.email = ? AND ` + "`" + `users` + "`" + `.deleted_at IS NULL
 `
@@ -57,6 +70,7 @@ type GetUserByEmailRow struct {
 	Phone     sql.NullString
 	Role      NullUsersRole
 	CreatedAt sql.NullTime
+	Salt      string
 }
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error) {
@@ -70,6 +84,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 		&i.Phone,
 		&i.Role,
 		&i.CreatedAt,
+		&i.Salt,
 	)
 	return i, err
 }
@@ -82,7 +97,8 @@ SELECT
   ` + "`" + `users` + "`" + `.password,
   ` + "`" + `users` + "`" + `.phone,
   ` + "`" + `users` + "`" + `.role,
-  ` + "`" + `users` + "`" + `.created_at
+  ` + "`" + `users` + "`" + `.created_at,
+  ` + "`" + `users` + "`" + `.salt
 FROM ` + "`" + `users` + "`" + `
 WHERE ` + "`" + `users` + "`" + `.id = ? AND ` + "`" + `users` + "`" + `.deleted_at IS NULL
 `
@@ -95,6 +111,7 @@ type GetUserByIDRow struct {
 	Phone     sql.NullString
 	Role      NullUsersRole
 	CreatedAt sql.NullTime
+	Salt      string
 }
 
 func (q *Queries) GetUserByID(ctx context.Context, id string) (GetUserByIDRow, error) {
@@ -108,6 +125,7 @@ func (q *Queries) GetUserByID(ctx context.Context, id string) (GetUserByIDRow, e
 		&i.Phone,
 		&i.Role,
 		&i.CreatedAt,
+		&i.Salt,
 	)
 	return i, err
 }

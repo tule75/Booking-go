@@ -1,8 +1,8 @@
 package controller
 
 import (
-	dto "ecommerce_go/internal/models/DTO"
-	"ecommerce_go/internal/service"
+	requestDTO "ecommerce_go/internal/models/request"
+	iservice "ecommerce_go/internal/service/interface"
 	"ecommerce_go/pkg/response"
 
 	"github.com/gin-gonic/gin"
@@ -10,28 +10,73 @@ import (
 
 type IUserController interface {
 	Register(c *gin.Context)
+	Login(c *gin.Context)
+	VerifyOTP(c *gin.Context)
+	PasswordRegister(c *gin.Context)
 }
 
 type UserController struct {
-	userService service.IUserService
 }
 
 // Register implements IUserController.
 func (uc *UserController) Register(c *gin.Context) {
-	var param dto.RegisterRequestModel
+	var userLogin = iservice.UserLogin()
+	var param requestDTO.RegisterRequestModel
 	if err := c.ShouldBindJSON(&param); err != nil {
 		response.ErrorResponse(c, response.FalseEmailResponseCode, err.Error())
 		return
 	}
-	var code = uc.userService.Register(param.Email, param.Password)
+	var code, _ = userLogin.Register(c, &param)
 
 	response.SuccessResponse(c, code, nil)
 }
 
-func NewUserController(us service.IUserService) IUserController {
-	return &UserController{
-		userService: us,
+// Login
+func (uc *UserController) Login(c *gin.Context) {
+	var userLogin = iservice.UserLogin()
+	var param requestDTO.LoginRequestModel
+	if err := c.ShouldBindJSON(&param); err != nil {
+		response.ErrorResponse(c, response.FalseEmailResponseCode, err.Error())
+		return
 	}
+	var code, out, _ = userLogin.Login(c, &param)
+
+	response.SuccessResponse(c, code, out)
+}
+
+func (uc *UserController) VerifyOTP(c *gin.Context) {
+	var userLogin = iservice.UserLogin()
+	var param requestDTO.VerifyRequest
+	if err := c.ShouldBindJSON(&param); err != nil {
+		response.ErrorResponse(c, response.FalseEmailResponseCode, err.Error())
+		return
+	}
+	var out, err = userLogin.VerifyOTP(c, &param)
+
+	if err != nil {
+		response.ErrorResponse(c, response.ErrorGenAuthCode, err.Error())
+		return
+	}
+	response.SuccessResponse(c, response.SuccessResponseCode, out)
+}
+
+func (uc *UserController) PasswordRegister(c *gin.Context) {
+	var userLogin = iservice.UserLogin()
+	var param requestDTO.UserCreateRequestModel
+	if err := c.ShouldBindJSON(&param); err != nil {
+		response.ErrorResponse(c, response.FalseEmailResponseCode, err.Error())
+		return
+	}
+	out, err := userLogin.UpdatePasswordRegister(c, &param)
+	if err != nil {
+		response.ErrorResponse(c, response.ErrorGenAuthCode, err.Error())
+		return
+	}
+	response.SuccessResponse(c, response.SuccessResponseCode, out)
+}
+
+func NewUserController() IUserController {
+	return &UserController{}
 }
 
 // func (uc *UserController) GetUserInfo(c *gin.Context) {

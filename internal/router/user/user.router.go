@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 	"ecommerce_go/global"
+	"ecommerce_go/internal/controller"
 	"ecommerce_go/internal/middleware"
-	"ecommerce_go/internal/wire"
 	"encoding/json"
 
 	"github.com/gin-gonic/gin"
@@ -16,13 +16,14 @@ type UserRouter struct {
 }
 
 func (r *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
-	uc, _ := wire.InitUserRouterHanlder()
-
+	//uc, _ := wire.InitUserRouterHanlder()
+	uc := controller.NewUserController()
 	userPublicRouter := Router.Group("/users")
 	{
 		userPublicRouter.POST("/register", uc.Register)
-		userPublicRouter.GET("/login", handle)
-		userPublicRouter.GET("/sendOTP", handle)
+		userPublicRouter.POST("/login", uc.Login)
+		userPublicRouter.POST("/verify-otp", uc.VerifyOTP)
+		userPublicRouter.POST("/create-password", uc.PasswordRegister)
 	}
 
 	userPrivateRouter := Router.Group("/users")

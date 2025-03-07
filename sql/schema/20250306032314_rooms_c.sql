@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS `rooms` (
-    id CHAR(36) PRIMARY KEY,
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     property_id CHAR(36) NOT NULL,
     name VARCHAR(255),
     price DECIMAL(10,2) NOT NULL,

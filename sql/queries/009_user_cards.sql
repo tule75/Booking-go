@@ -1,4 +1,4 @@
--- name: CreateUserCard :exec
+-- name: CreateUserCard :execresult
 INSERT INTO user_cards (id, user_id, stripe_customer_id, stripe_card_id, last4, brand, exp_month, exp_year)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 

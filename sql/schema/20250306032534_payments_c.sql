@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS `payments` (
-    id CHAR(36) PRIMARY KEY,
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     booking_id CHAR(36) NOT NULL,
     user_id CHAR(36) NOT NULL,
     amount DECIMAL(10,2) NOT NULL,

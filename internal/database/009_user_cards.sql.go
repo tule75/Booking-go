@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-const createUserCard = `-- name: CreateUserCard :exec
+const createUserCard = `-- name: CreateUserCard :execresult
 INSERT INTO user_cards (id, user_id, stripe_customer_id, stripe_card_id, last4, brand, exp_month, exp_year)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `
@@ -26,8 +26,8 @@ type CreateUserCardParams struct {
 	ExpYear          int32
 }
 
-func (q *Queries) CreateUserCard(ctx context.Context, arg CreateUserCardParams) error {
-	_, err := q.db.ExecContext(ctx, createUserCard,
+func (q *Queries) CreateUserCard(ctx context.Context, arg CreateUserCardParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createUserCard,
 		arg.ID,
 		arg.UserID,
 		arg.StripeCustomerID,
@@ -37,7 +37,6 @@ func (q *Queries) CreateUserCard(ctx context.Context, arg CreateUserCardParams) 
 		arg.ExpMonth,
 		arg.ExpYear,
 	)
-	return err
 }
 
 const getUserCards = `-- name: GetUserCards :many

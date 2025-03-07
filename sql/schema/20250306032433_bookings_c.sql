@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS `bookings` (
-    id CHAR(36) PRIMARY KEY,
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     user_id CHAR(36) NOT NULL,
     property_id CHAR(36) NOT NULL,
     room_id CHAR(36) NULL,

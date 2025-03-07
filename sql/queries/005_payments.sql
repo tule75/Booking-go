@@ -1,4 +1,4 @@
--- name: CreatePayment :exec
+-- name: CreatePayment :execresult
 INSERT INTO payments (id, booking_id, user_id, amount, payment_method, status, stripe_payment_intent_id)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 

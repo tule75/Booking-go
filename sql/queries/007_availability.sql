@@ -1,4 +1,4 @@
--- name: CreateAvailability :exec
+-- name: CreateAvailability :execresult
 INSERT INTO `availability` (id, room_id, date, is_available)
 VALUES (?, ?, ?, ?);
 

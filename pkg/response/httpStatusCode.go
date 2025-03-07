@@ -6,6 +6,10 @@ const (
 	FalsePasswordResponseCode = 20002
 	InvalidTokenResponseCode  = 20003
 	ErrorBindingParam         = 30001
+	ExistEmailResponseCode    = 20004
+	ErrorGenAuthCode          = 30002
+	ErrCodeAuthFailed         = 30003
+	CannotCreateUser          = 30004
 )
 
 var msg = map[int]string{
@@ -14,4 +18,8 @@ var msg = map[int]string{
 	FalsePasswordResponseCode: "False Password",
 	InvalidTokenResponseCode:  "Invalid Token response",
 	ErrorBindingParam:         "Error Binding parameter",
+	ExistEmailResponseCode:    "Exists Email",
+	ErrorGenAuthCode:          "Error Gen JWT Authentication token",
+	ErrCodeAuthFailed:         "Error Auth",
+	CannotCreateUser:          "Cannot Create User",
 }

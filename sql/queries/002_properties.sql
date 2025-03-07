@@ -1,4 +1,4 @@
--- name: CreateProperty :exec
+-- name: CreateProperty :execresult
 INSERT INTO properties (id, owner_id, name, description, location, price, amenities)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 

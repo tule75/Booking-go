@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const createAvailability = `-- name: CreateAvailability :exec
+const createAvailability = `-- name: CreateAvailability :execresult
 INSERT INTO ` + "`" + `availability` + "`" + ` (id, room_id, date, is_available)
 VALUES (?, ?, ?, ?)
 `
@@ -23,14 +23,13 @@ type CreateAvailabilityParams struct {
 	IsAvailable sql.NullBool
 }
 
-func (q *Queries) CreateAvailability(ctx context.Context, arg CreateAvailabilityParams) error {
-	_, err := q.db.ExecContext(ctx, createAvailability,
+func (q *Queries) CreateAvailability(ctx context.Context, arg CreateAvailabilityParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createAvailability,
 		arg.ID,
 		arg.RoomID,
 		arg.Date,
 		arg.IsAvailable,
 	)
-	return err
 }
 
 const getAvailabilityByID = `-- name: GetAvailabilityByID :one

@@ -1,4 +1,4 @@
--- name: CreateNotification :exec
+-- name: CreateNotification :execresult
 INSERT INTO notifications (id, user_id, message, is_read)
 VALUES (?, ?, ?, ?);
 

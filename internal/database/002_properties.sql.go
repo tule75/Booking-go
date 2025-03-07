@@ -11,7 +11,7 @@ import (
 	"encoding/json"
 )
 
-const createProperty = `-- name: CreateProperty :exec
+const createProperty = `-- name: CreateProperty :execresult
 INSERT INTO properties (id, owner_id, name, description, location, price, amenities)
 VALUES (?, ?, ?, ?, ?, ?, ?)
 `
@@ -26,8 +26,8 @@ type CreatePropertyParams struct {
 	Amenities   json.RawMessage
 }
 
-func (q *Queries) CreateProperty(ctx context.Context, arg CreatePropertyParams) error {
-	_, err := q.db.ExecContext(ctx, createProperty,
+func (q *Queries) CreateProperty(ctx context.Context, arg CreatePropertyParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createProperty,
 		arg.ID,
 		arg.OwnerID,
 		arg.Name,
@@ -36,7 +36,6 @@ func (q *Queries) CreateProperty(ctx context.Context, arg CreatePropertyParams) 
 		arg.Price,
 		arg.Amenities,
 	)
-	return err
 }
 
 const getPropertyByID = `-- name: GetPropertyByID :one

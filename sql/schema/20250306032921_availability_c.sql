@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 CREATE TABLE if not EXISTS `availability` (
-    id CHAR(36) PRIMARY KEY,
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     room_id CHAR(36) NOT NULL,
     date DATE NOT NULL,
     is_available BOOLEAN DEFAULT TRUE,

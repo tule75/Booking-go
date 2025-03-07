@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const createBooking = `-- name: CreateBooking :exec
+const createBooking = `-- name: CreateBooking :execresult
 INSERT INTO bookings (id, user_id, property_id, room_id, check_in, check_out, guests, total_price, status)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
@@ -28,8 +28,8 @@ type CreateBookingParams struct {
 	Status     NullBookingsStatus
 }
 
-func (q *Queries) CreateBooking(ctx context.Context, arg CreateBookingParams) error {
-	_, err := q.db.ExecContext(ctx, createBooking,
+func (q *Queries) CreateBooking(ctx context.Context, arg CreateBookingParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createBooking,
 		arg.ID,
 		arg.UserID,
 		arg.PropertyID,
@@ -40,7 +40,6 @@ func (q *Queries) CreateBooking(ctx context.Context, arg CreateBookingParams) er
 		arg.TotalPrice,
 		arg.Status,
 	)
-	return err
 }
 
 const getBookingByID = `-- name: GetBookingByID :one

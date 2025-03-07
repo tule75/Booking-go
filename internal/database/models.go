@@ -148,9 +148,9 @@ func (ns NullPaymentsStatus) Value() (driver.Value, error) {
 type UsersRole string
 
 const (
-	UsersRoleCustomer UsersRole = "customer"
-	UsersRoleHost     UsersRole = "host"
-	UsersRoleAdmin    UsersRole = "admin"
+	UsersRoleCUSTOMER UsersRole = "CUSTOMER"
+	UsersRoleHOST     UsersRole = "HOST"
+	UsersRoleADMIN    UsersRole = "ADMIN"
 )
 
 func (e *UsersRole) Scan(src interface{}) error {
@@ -277,6 +277,7 @@ type User struct {
 	Role      NullUsersRole
 	CreatedAt sql.NullTime
 	DeletedAt sql.NullTime
+	Salt      string
 }
 
 type UserCard struct {
