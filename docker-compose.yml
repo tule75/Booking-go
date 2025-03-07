@@ -13,37 +13,40 @@ services:
       KAFKA_CFG_NODE_ID: 1
       KAFKA_CFG_PROCESS_ROLES: controller,broker
       KAFKA_CFG_LISTENERS: PLAINTEXT://:9094,CONTROLLER://:9095
-      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka_container:9094
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://172.16.1.10:9094
       KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka_container:9095
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_HEAP_OPTS: -Xmx512M -Xms256M
-      KAFKA_KRAFT_CLUSTER_ID: T-oIRJTzR1eCXo2k7m8EiQ  # Thay bằng Cluster ID hợp lệ
+      KAFKA_KRAFT_CLUSTER_ID: T-oIRJTzR1eCXo2k7m8EiQ
       ALLOW_PLAINTEXT_LISTENER: yes
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+      KAFKA_BROKER_ID: 1
     ports:
-      - "19094:9094"
-      - "19095:9095"
+      - "9094:9094"
+      - "9095:9095"
     volumes:
       - ./kafka/broker1:/bitnami/kafka:rw
+
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui_container
     environment:
       KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka_container:9094
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 172.16.1.10:9094
     ports:
       - "9090:8080"
     depends_on:
       - kafka
+
 
   mysql:
     image: mysql
     container_name: mysql_container
     environment:
       MYSQL_ROOT_PASSWORD: cmmtpnx1
-      MYSQL_DATABASE: shopdevgo
+      MYSQL_DATABASE: bookinggo
       MYSQL_PASSWORD: cmmtpnx1
     ports:
       - "3307:3306"

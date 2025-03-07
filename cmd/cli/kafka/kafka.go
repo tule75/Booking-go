@@ -1,4 +1,4 @@
-package kafka
+package main
 
 import (
 	"context"
@@ -14,7 +14,7 @@ import (
 var KafkaProducer *kafka.Writer
 
 const (
-	kafkaURL   = "localhost:19094"
+	kafkaURL   = "localhost:9094"
 	kafkaTopic = "user_topic_1"
 )
 
@@ -34,7 +34,6 @@ func getKafkaReader(kafkaURL, topic, GroupID string) *kafka.Reader {
 		Brokers:        broker,
 		GroupID:        GroupID,
 		Topic:          topic,
-		Partition:      10e3, //10KB
 		MaxBytes:       10e6, //10MB
 		CommitInterval: time.Second,
 		StartOffset:    kafka.FirstOffset,
@@ -113,5 +112,5 @@ func main() {
 	go RegisterConsumerATCS(1)
 	go RegisterConsumerATCS(2)
 
-	r.Run(":8888")
+	r.Run(":8889")
 }

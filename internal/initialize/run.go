@@ -13,7 +13,9 @@ func Run() {
 	InitLogger()
 	global.Logger.Info("Config ok roif: ", zap.String("Ok", "success"))
 	InitMySQL()
+	InitMySQLC()
 	InitRedis()
+	InitKafka()
 	r := InitRouter()
 
 	r.Run(fmt.Sprintf(":%v", global.Config.Server.Port))

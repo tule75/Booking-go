@@ -24,11 +24,6 @@ func InitRouter() *gin.Engine {
 
 	MainGroup := r.Group("/v1/2025")
 	{
-		MainGroup.GET("/", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"message": "Hello world",
-			})
-		})
 		userRouter.InitUserRouter(MainGroup)
 	}
 	{

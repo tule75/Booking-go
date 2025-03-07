@@ -2,6 +2,7 @@ package repo
 
 import (
 	"ecommerce_go/global"
+	"ecommerce_go/internal/database"
 	"fmt"
 	"time"
 )
@@ -10,7 +11,9 @@ type IUserAuthRepo interface {
 	AddOTP(email string, otp string, time int64) error
 }
 
-type UserAuthRepo struct{}
+type UserAuthRepo struct {
+	sqlc *database.Queries
+}
 
 // AddOTP implements IUserAuthRepo.
 func (u *UserAuthRepo) AddOTP(email string, otp string, timeExpiration int64) error {
@@ -19,5 +22,7 @@ func (u *UserAuthRepo) AddOTP(email string, otp string, timeExpiration int64) er
 }
 
 func NewUserAuthRepo() IUserAuthRepo {
-	return &UserAuthRepo{}
+	return &UserAuthRepo{
+		sqlc: database.New(global.Mdbc),
+	}
 }

@@ -1,0 +1,33 @@
+server:
+  port: 8081
+  model: "dev"
+mysql:
+  username: 
+  password: 
+  host: 
+  port: 
+  dbname: bookinggo
+  maxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifeTime: 3600
+security:
+  key: 
+log:
+  logLevel: debug
+  fileLogName: "./storage/logs/log-%s.txt"
+  maxSize:    500
+  maxBackups: 213
+  maxAge:     20
+  compress:   true
+redis:
+  username:
+  password:
+  addr:
+  db: 0
+  poolSize: 10
+email:
+  SMTPUsername:
+  SMTPPassword:
+kafka:
+  addr:
+  topic:

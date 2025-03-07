@@ -1,10 +1,13 @@
-@baseUrl=http://localhost:8081/v1/2025
+@baseUrl=http://localhost:8889
 
 ### User Registration
-POST {{baseUrl}}/users/register
+POST {{baseUrl}}/action/stock
 Content-type: application/json
 
 {
     "Email": "tulehd03@gmail.com",
     "Password": "TEST_USER"
 }
+
+### 
+GET {{baseUrl}}/users/login
