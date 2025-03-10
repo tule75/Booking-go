@@ -29,14 +29,17 @@ func GetCurrentUser(c *gin.Context) (database.GetUserByEmailRow, error) {
 	if err == redis.Nil {
 		fmt.Println("User not found in Redis")
 		response.UnauthorizedResponse(c, response.UnauthorizedResponseCode)
+		return database.GetUserByEmailRow{}, err
 	} else if err != nil {
 		fmt.Println("Error getting user from Redis:", err)
 		response.UnauthorizedResponse(c, response.UnauthorizedResponseCode)
+		return database.GetUserByEmailRow{}, err
 	} else {
 		err = json.Unmarshal([]byte(infoUserJson), &user)
 		if err != nil {
 			fmt.Println("Error unmarshalling user:", err)
 			response.UnauthorizedResponse(c, response.UnauthorizedResponseCode)
+			return database.GetUserByEmailRow{}, err
 		}
 	}
 

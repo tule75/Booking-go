@@ -5,5 +5,8 @@ const (
 	PrePropertiesId       = "properties-id"
 	PrePropertiesSearch   = "properties-search"
 	PreRoomByPropertiesId = "room-by-properties-id"
-	preRoomById           = "pre-room-by-id"
+	PreRoomById           = "pre-room-by-id"
+	RoleAdmin             = "ADMIN"
+	RoleCustomer          = "CUSTOMER"
+	RoleHost              = "HOST"
 )

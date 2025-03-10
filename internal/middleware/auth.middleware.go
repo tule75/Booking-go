@@ -38,3 +38,30 @@ func AuthenticationMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func Authorization(allowedRoles []string) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var user, err = auth.GetCurrentUser(ctx)
+
+		if err != nil {
+			response.UnauthorizedResponse(ctx, response.UnauthorizedResponseCode)
+			return
+		}
+
+		hasRole := false
+		ur := string(user.Role.UsersRole)
+		for _, ar := range allowedRoles {
+			if strings.EqualFold(ur, ar) {
+				hasRole = true
+				break
+			}
+		}
+
+		if !hasRole {
+			response.UnauthorizedResponse(ctx, response.UnauthorizedResponseCode)
+			return
+		}
+
+		ctx.Next()
+	}
+}

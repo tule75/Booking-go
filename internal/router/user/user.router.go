@@ -5,6 +5,7 @@ import (
 	"ecommerce_go/global"
 	"ecommerce_go/internal/controller"
 	"ecommerce_go/internal/middleware"
+	iservice "ecommerce_go/internal/service/interface"
 	"encoding/json"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,7 @@ type UserRouter struct {
 
 func (r *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 	//uc, _ := wire.InitUserRouterHanlder()
-	uc := controller.NewUserController()
+	uc := controller.NewUserController(iservice.UserLogin())
 	userPublicRouter := Router.Group("/users")
 	{
 		userPublicRouter.POST("/register", uc.Register)
