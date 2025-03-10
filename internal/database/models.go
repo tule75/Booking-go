@@ -34,8 +34,8 @@ func (e *BookingsStatus) Scan(src interface{}) error {
 }
 
 type NullBookingsStatus struct {
-	BookingsStatus BookingsStatus
-	Valid          bool // Valid is true if BookingsStatus is not NULL
+	BookingsStatus BookingsStatus `json:"bookings_status"`
+	Valid          bool           `json:"valid"` // Valid is true if BookingsStatus is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -79,8 +79,8 @@ func (e *PaymentsPaymentMethod) Scan(src interface{}) error {
 }
 
 type NullPaymentsPaymentMethod struct {
-	PaymentsPaymentMethod PaymentsPaymentMethod
-	Valid                 bool // Valid is true if PaymentsPaymentMethod is not NULL
+	PaymentsPaymentMethod PaymentsPaymentMethod `json:"payments_payment_method"`
+	Valid                 bool                  `json:"valid"` // Valid is true if PaymentsPaymentMethod is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -123,8 +123,8 @@ func (e *PaymentsStatus) Scan(src interface{}) error {
 }
 
 type NullPaymentsStatus struct {
-	PaymentsStatus PaymentsStatus
-	Valid          bool // Valid is true if PaymentsStatus is not NULL
+	PaymentsStatus PaymentsStatus `json:"payments_status"`
+	Valid          bool           `json:"valid"` // Valid is true if PaymentsStatus is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -166,8 +166,8 @@ func (e *UsersRole) Scan(src interface{}) error {
 }
 
 type NullUsersRole struct {
-	UsersRole UsersRole
-	Valid     bool // Valid is true if UsersRole is not NULL
+	UsersRole UsersRole `json:"users_role"`
+	Valid     bool      `json:"valid"` // Valid is true if UsersRole is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -189,106 +189,106 @@ func (ns NullUsersRole) Value() (driver.Value, error) {
 }
 
 type Availability struct {
-	ID          string
-	RoomID      string
-	Date        time.Time
-	IsAvailable sql.NullBool
-	DeletedAt   sql.NullTime
+	ID          string       `json:"id"`
+	RoomID      string       `json:"room_id"`
+	Date        time.Time    `json:"date"`
+	IsAvailable sql.NullBool `json:"is_available"`
+	DeletedAt   sql.NullTime `json:"deleted_at"`
 }
 
 type Booking struct {
-	ID         string
-	UserID     string
-	PropertyID string
-	RoomID     sql.NullString
-	CheckIn    time.Time
-	CheckOut   time.Time
-	Guests     int32
-	Status     NullBookingsStatus
-	TotalPrice string
-	CreatedAt  sql.NullTime
-	DeletedAt  sql.NullTime
+	ID         string             `json:"id"`
+	UserID     string             `json:"user_id"`
+	PropertyID string             `json:"property_id"`
+	RoomID     sql.NullString     `json:"room_id"`
+	CheckIn    time.Time          `json:"check_in"`
+	CheckOut   time.Time          `json:"check_out"`
+	Guests     int32              `json:"guests"`
+	Status     NullBookingsStatus `json:"status"`
+	TotalPrice string             `json:"total_price"`
+	CreatedAt  sql.NullTime       `json:"created_at"`
+	DeletedAt  sql.NullTime       `json:"deleted_at"`
 }
 
 type Notification struct {
-	ID        string
-	UserID    string
-	Message   string
-	IsRead    sql.NullBool
-	CreatedAt sql.NullTime
-	DeletedAt sql.NullTime
+	ID        string       `json:"id"`
+	UserID    string       `json:"user_id"`
+	Message   string       `json:"message"`
+	IsRead    sql.NullBool `json:"is_read"`
+	CreatedAt sql.NullTime `json:"created_at"`
+	DeletedAt sql.NullTime `json:"deleted_at"`
 }
 
 type Payment struct {
-	ID                    string
-	BookingID             string
-	UserID                string
-	Amount                string
-	PaymentMethod         NullPaymentsPaymentMethod
-	Status                NullPaymentsStatus
-	StripePaymentIntentID sql.NullString
-	StripeChargeID        sql.NullString
-	StripeCustomerID      sql.NullString
-	StripeRefundID        sql.NullString
-	CreatedAt             sql.NullTime
-	DeletedAt             sql.NullTime
+	ID                    string                    `json:"id"`
+	BookingID             string                    `json:"booking_id"`
+	UserID                string                    `json:"user_id"`
+	Amount                string                    `json:"amount"`
+	PaymentMethod         NullPaymentsPaymentMethod `json:"payment_method"`
+	Status                NullPaymentsStatus        `json:"status"`
+	StripePaymentIntentID sql.NullString            `json:"stripe_payment_intent_id"`
+	StripeChargeID        sql.NullString            `json:"stripe_charge_id"`
+	StripeCustomerID      sql.NullString            `json:"stripe_customer_id"`
+	StripeRefundID        sql.NullString            `json:"stripe_refund_id"`
+	CreatedAt             sql.NullTime              `json:"created_at"`
+	DeletedAt             sql.NullTime              `json:"deleted_at"`
 }
 
 type Property struct {
-	ID          string
-	OwnerID     string
-	Name        string
-	Description sql.NullString
-	Location    string
-	Price       string
-	Amenities   json.RawMessage
-	Rating      sql.NullString
-	CreatedAt   sql.NullTime
-	DeletedAt   sql.NullTime
+	ID          string          `json:"id"`
+	OwnerID     string          `json:"owner_id"`
+	Name        string          `json:"name"`
+	Description sql.NullString  `json:"description"`
+	Location    string          `json:"location"`
+	Price       string          `json:"price"`
+	Amenities   json.RawMessage `json:"amenities"`
+	Rating      sql.NullString  `json:"rating"`
+	CreatedAt   sql.NullTime    `json:"created_at"`
+	DeletedAt   sql.NullTime    `json:"deleted_at"`
 }
 
 type Review struct {
-	ID         string
-	UserID     string
-	PropertyID string
-	Rating     sql.NullInt32
-	Comment    sql.NullString
-	CreatedAt  sql.NullTime
-	DeletedAt  sql.NullTime
+	ID         string         `json:"id"`
+	UserID     string         `json:"user_id"`
+	PropertyID string         `json:"property_id"`
+	Rating     sql.NullInt32  `json:"rating"`
+	Comment    sql.NullString `json:"comment"`
+	CreatedAt  sql.NullTime   `json:"created_at"`
+	DeletedAt  sql.NullTime   `json:"deleted_at"`
 }
 
 type Room struct {
-	ID          string
-	PropertyID  string
-	Name        sql.NullString
-	Price       string
-	MaxGuests   int32
-	IsAvailable sql.NullBool
-	CreatedAt   sql.NullTime
-	DeletedAt   sql.NullTime
+	ID          string         `json:"id"`
+	PropertyID  string         `json:"property_id"`
+	Name        sql.NullString `json:"name"`
+	Price       string         `json:"price"`
+	MaxGuests   int32          `json:"max_guests"`
+	IsAvailable sql.NullBool   `json:"is_available"`
+	CreatedAt   sql.NullTime   `json:"created_at"`
+	DeletedAt   sql.NullTime   `json:"deleted_at"`
 }
 
 type User struct {
-	ID        string
-	FullName  string
-	Email     string
-	Password  string
-	Phone     sql.NullString
-	Role      NullUsersRole
-	CreatedAt sql.NullTime
-	DeletedAt sql.NullTime
-	Salt      string
+	ID        string         `json:"id"`
+	FullName  string         `json:"full_name"`
+	Email     string         `json:"email"`
+	Password  string         `json:"password"`
+	Phone     sql.NullString `json:"phone"`
+	Role      NullUsersRole  `json:"role"`
+	CreatedAt sql.NullTime   `json:"created_at"`
+	DeletedAt sql.NullTime   `json:"deleted_at"`
+	Salt      string         `json:"salt"`
 }
 
 type UserCard struct {
-	ID               string
-	UserID           string
-	StripeCustomerID string
-	StripeCardID     string
-	Last4            string
-	Brand            string
-	ExpMonth         int32
-	ExpYear          int32
-	CreatedAt        sql.NullTime
-	DeletedAt        sql.NullTime
+	ID               string       `json:"id"`
+	UserID           string       `json:"user_id"`
+	StripeCustomerID string       `json:"stripe_customer_id"`
+	StripeCardID     string       `json:"stripe_card_id"`
+	Last4            string       `json:"last4"`
+	Brand            string       `json:"brand"`
+	ExpMonth         int32        `json:"exp_month"`
+	ExpYear          int32        `json:"exp_year"`
+	CreatedAt        sql.NullTime `json:"created_at"`
+	DeletedAt        sql.NullTime `json:"deleted_at"`
 }

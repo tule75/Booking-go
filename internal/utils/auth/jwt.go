@@ -2,13 +2,12 @@ package auth
 
 import (
 	"ecommerce_go/global"
+	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 )
-
-//"github.com/golang-jwt/jwt"
 
 type PayloadClaims struct {
 	jwt.StandardClaims
@@ -42,29 +41,23 @@ func CreateToken(uuidToken string) (string, error) {
 	})
 }
 
-func ParseJwtTokenSubject(token string) (*jwt.StandardClaims, error) {
-	tokenClaims, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(jwtToken *jwt.Token) (interface{}, error) {
+func VerifyToken(tokenString string) (string, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &PayloadClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(global.Config.JWT.API_SECRET_KEY), nil
 	})
 
-	if tokenClaims != nil {
-		if claims, ok := tokenClaims.Claims.(*jwt.StandardClaims); ok && tokenClaims.Valid {
-			return claims, nil
-		}
-	}
-
-	return nil, err
-}
-
-// validate token
-
-func VerifyTokenSubject(token string) (*jwt.StandardClaims, error) {
-	claims, err := ParseJwtTokenSubject(token)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	if err = claims.Valid(); err != nil {
-		return nil, err
+
+	claims, ok := token.Claims.(*PayloadClaims)
+	if !ok || !token.Valid {
+		return "", errors.New("invalid token")
 	}
-	return claims, nil
+
+	if claims.ExpiresAt < time.Now().Unix() {
+		return "", errors.New("token expired")
+	}
+
+	return claims.Subject, nil
 }

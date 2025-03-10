@@ -16,42 +16,67 @@ type IUserController interface {
 }
 
 type UserController struct {
+	UserLogin iservice.IUserLogin
 }
 
 // Register implements IUserController.
+// Register godoc
+// @Summary      Register to get OTP
+// @Description  Register to get OTP
+// @Tags         Account management
+// @Accept       json
+// @Produce      json
+// @Param        payload body requestDTO.RegisterRequestModel true "payload"
+// @Success      200  {object}  response.ResponseData
+// @Router       /users/register [POST]
 func (uc *UserController) Register(c *gin.Context) {
-	var userLogin = iservice.UserLogin()
 	var param requestDTO.RegisterRequestModel
 	if err := c.ShouldBindJSON(&param); err != nil {
 		response.ErrorResponse(c, response.FalseEmailResponseCode, err.Error())
 		return
 	}
-	var code, _ = userLogin.Register(c, &param)
+	var code, _ = uc.UserLogin.Register(c, &param)
 
 	response.SuccessResponse(c, code, nil)
 }
 
 // Login
+// @Summary      Login
+// @Description  Login
+// @Tags         Account management
+// @Accept       json
+// @Produce      json
+// @Param        payload body requestDTO.LoginRequestModel true "payload"
+// @Success      200  {object}  response.ResponseData
+// @Failure      500  {object}  response.ResponseData
+// @Router       /users/login [post]
 func (uc *UserController) Login(c *gin.Context) {
-	var userLogin = iservice.UserLogin()
 	var param requestDTO.LoginRequestModel
 	if err := c.ShouldBindJSON(&param); err != nil {
 		response.ErrorResponse(c, response.FalseEmailResponseCode, err.Error())
 		return
 	}
-	var code, out, _ = userLogin.Login(c, &param)
+	var code, out, _ = uc.UserLogin.Login(c, &param)
 
 	response.SuccessResponse(c, code, out)
 }
 
+// @Summary      Verify OTP
+// @Description  Verify OTP
+// @Tags         Account management
+// @Accept       json
+// @Produce      json
+// @Param        payload body requestDTO.VerifyRequest true "payload"
+// @Success      200  {object}  response.ResponseData
+// @Failure      500  {object}  response.ResponseData
+// @Router       /users/verify-otp [post]
 func (uc *UserController) VerifyOTP(c *gin.Context) {
-	var userLogin = iservice.UserLogin()
 	var param requestDTO.VerifyRequest
 	if err := c.ShouldBindJSON(&param); err != nil {
 		response.ErrorResponse(c, response.FalseEmailResponseCode, err.Error())
 		return
 	}
-	var out, err = userLogin.VerifyOTP(c, &param)
+	var out, err = uc.UserLogin.VerifyOTP(c, &param)
 
 	if err != nil {
 		response.ErrorResponse(c, response.ErrorGenAuthCode, err.Error())
@@ -60,23 +85,31 @@ func (uc *UserController) VerifyOTP(c *gin.Context) {
 	response.SuccessResponse(c, response.SuccessResponseCode, out)
 }
 
+// @Summary      Verify OTP
+// @Description  Verify OTP
+// @Tags         Account management
+// @Accept       json
+// @Produce      json
+// @Param        payload body requestDTO.UserCreateRequestModel true "payload"
+// @Success      200  {object}  response.ResponseData
+// @Failure      500  {object}  response.ResponseData
+// @Router       /users/create-password [post]
 func (uc *UserController) PasswordRegister(c *gin.Context) {
-	var userLogin = iservice.UserLogin()
 	var param requestDTO.UserCreateRequestModel
 	if err := c.ShouldBindJSON(&param); err != nil {
 		response.ErrorResponse(c, response.FalseEmailResponseCode, err.Error())
 		return
 	}
-	out, err := userLogin.UpdatePasswordRegister(c, &param)
+	out, code, err := uc.UserLogin.UpdatePasswordRegister(c, &param)
 	if err != nil {
-		response.ErrorResponse(c, response.ErrorGenAuthCode, err.Error())
+		response.ErrorResponse(c, code, err.Error())
 		return
 	}
-	response.SuccessResponse(c, response.SuccessResponseCode, out)
+	response.SuccessResponse(c, code, out)
 }
 
-func NewUserController() IUserController {
-	return &UserController{}
+func NewUserController(userLogin iservice.IUserLogin) IUserController {
+	return &UserController{UserLogin: userLogin}
 }
 
 // func (uc *UserController) GetUserInfo(c *gin.Context) {

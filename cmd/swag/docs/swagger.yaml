@@ -1,0 +1,173 @@
+basePath: /v1/2025
+definitions:
+  requestDTO.LoginRequestModel:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  requestDTO.RegisterRequestModel:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+    type: object
+  requestDTO.UserCreateRequestModel:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+      role:
+        $ref: '#/definitions/requestDTO.UserRole'
+      token:
+        type: string
+    type: object
+  requestDTO.UserRole:
+    enum:
+    - CUSTOMER
+    - HOST
+    type: string
+    x-enum-varnames:
+    - CUSTOMER
+    - HOST
+  requestDTO.VerifyRequest:
+    properties:
+      verify_code:
+        type: string
+      verify_key:
+        type: string
+    type: object
+  response.ResponseData:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8081
+info:
+  contact:
+    email: tulehd03@gmail.com
+    name: Tú Lê
+    url: http://github.com/tule75/Booking-Go
+  description: This is a sample server celler server.
+  license:
+    name: Booking Go v1.0
+    url: http://github.com/tule75/Booking-Go
+  termsOfService: http://github.com/tule75/Booking-Go
+  title: Booking Go
+  version: "1.0"
+paths:
+  /users/create-password:
+    post:
+      consumes:
+      - application/json
+      description: Verify OTP
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestDTO.UserCreateRequestModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Verify OTP
+      tags:
+      - Account management
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestDTO.LoginRequestModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Login
+      tags:
+      - Account management
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Register to get OTP
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestDTO.RegisterRequestModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Register to get OTP
+      tags:
+      - Account management
+  /users/verify-otp:
+    post:
+      consumes:
+      - application/json
+      description: Verify OTP
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestDTO.VerifyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Verify OTP
+      tags:
+      - Account management
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

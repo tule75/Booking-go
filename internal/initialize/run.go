@@ -4,10 +4,11 @@ import (
 	"ecommerce_go/global"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
-func Run() {
+func Run() *gin.Engine {
 	LoadConfig()
 	fmt.Println("mysql ", global.Config.Mysql.Username)
 	InitLogger()
@@ -18,6 +19,5 @@ func Run() {
 	InitKafka()
 	InitServices()
 	r := InitRouter()
-
-	r.Run(fmt.Sprintf(":%v", global.Config.Server.Port))
+	return r
 }

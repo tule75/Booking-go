@@ -40,6 +40,9 @@ sqlgen:
 wiregen:
 	cd internal\wire && wire
 
+swag:
+	swag init -g ./cmd/server/main.go -o ./cmd/swag/docs
+
 .PHONY: dev run downse upse resetse docker_up docker_down wiregen
 
 .PHONY: air

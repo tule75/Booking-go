@@ -17,13 +17,13 @@ VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreatePropertyParams struct {
-	ID          string
-	OwnerID     string
-	Name        string
-	Description sql.NullString
-	Location    string
-	Price       string
-	Amenities   json.RawMessage
+	ID          string          `json:"id"`
+	OwnerID     string          `json:"owner_id"`
+	Name        string          `json:"name"`
+	Description sql.NullString  `json:"description"`
+	Location    string          `json:"location"`
+	Price       string          `json:"price"`
+	Amenities   json.RawMessage `json:"amenities"`
 }
 
 func (q *Queries) CreateProperty(ctx context.Context, arg CreatePropertyParams) (sql.Result, error) {
@@ -53,14 +53,14 @@ WHERE properties.id = ? AND properties.deleted_at IS NULL
 `
 
 type GetPropertyByIDRow struct {
-	PropertyID  string
-	OwnerID     string
-	Name        string
-	Description sql.NullString
-	Location    string
-	Price       string
-	Amenities   json.RawMessage
-	CreatedAt   sql.NullTime
+	PropertyID  string          `json:"property_id"`
+	OwnerID     string          `json:"owner_id"`
+	Name        string          `json:"name"`
+	Description sql.NullString  `json:"description"`
+	Location    string          `json:"location"`
+	Price       string          `json:"price"`
+	Amenities   json.RawMessage `json:"amenities"`
+	CreatedAt   sql.NullTime    `json:"created_at"`
 }
 
 func (q *Queries) GetPropertyByID(ctx context.Context, id string) (GetPropertyByIDRow, error) {
@@ -96,20 +96,20 @@ LIMIT ? OFFSET ?
 `
 
 type ListPropertiesByOwnerParams struct {
-	OwnerID string
-	Limit   int32
-	Offset  int32
+	OwnerID string `json:"owner_id"`
+	Limit   int32  `json:"limit"`
+	Offset  int32  `json:"offset"`
 }
 
 type ListPropertiesByOwnerRow struct {
-	PropertyID  string
-	OwnerID     string
-	Name        string
-	Description sql.NullString
-	Location    string
-	Price       string
-	Amenities   json.RawMessage
-	CreatedAt   sql.NullTime
+	PropertyID  string          `json:"property_id"`
+	OwnerID     string          `json:"owner_id"`
+	Name        string          `json:"name"`
+	Description sql.NullString  `json:"description"`
+	Location    string          `json:"location"`
+	Price       string          `json:"price"`
+	Amenities   json.RawMessage `json:"amenities"`
+	CreatedAt   sql.NullTime    `json:"created_at"`
 }
 
 func (q *Queries) ListPropertiesByOwner(ctx context.Context, arg ListPropertiesByOwnerParams) ([]ListPropertiesByOwnerRow, error) {
@@ -163,21 +163,21 @@ LIMIT ? OFFSET ?
 `
 
 type SearchPropertiesParams struct {
-	FromPrice string
-	ToPrice   string
-	Limit     int32
-	Offset    int32
+	FromPrice string `json:"from_price"`
+	ToPrice   string `json:"to_price"`
+	Limit     int32  `json:"limit"`
+	Offset    int32  `json:"offset"`
 }
 
 type SearchPropertiesRow struct {
-	PropertyID  string
-	OwnerID     string
-	Name        string
-	Description sql.NullString
-	Location    string
-	Price       string
-	Amenities   json.RawMessage
-	CreatedAt   sql.NullTime
+	PropertyID  string          `json:"property_id"`
+	OwnerID     string          `json:"owner_id"`
+	Name        string          `json:"name"`
+	Description sql.NullString  `json:"description"`
+	Location    string          `json:"location"`
+	Price       string          `json:"price"`
+	Amenities   json.RawMessage `json:"amenities"`
+	CreatedAt   sql.NullTime    `json:"created_at"`
 }
 
 func (q *Queries) SearchProperties(ctx context.Context, arg SearchPropertiesParams) ([]SearchPropertiesRow, error) {
@@ -233,12 +233,12 @@ WHERE id = ? AND deleted_at IS NULL
 `
 
 type UpdatePropertyParams struct {
-	Name        string
-	Description sql.NullString
-	Location    string
-	Price       string
-	Amenities   json.RawMessage
-	ID          string
+	Name        string          `json:"name"`
+	Description sql.NullString  `json:"description"`
+	Location    string          `json:"location"`
+	Price       string          `json:"price"`
+	Amenities   json.RawMessage `json:"amenities"`
+	ID          string          `json:"id"`
 }
 
 func (q *Queries) UpdateProperty(ctx context.Context, arg UpdatePropertyParams) error {

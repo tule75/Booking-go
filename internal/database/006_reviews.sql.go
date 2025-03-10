@@ -16,11 +16,11 @@ VALUES (?, ?, ?, ?, ?)
 `
 
 type CreateReviewParams struct {
-	ID         string
-	UserID     string
-	PropertyID string
-	Rating     sql.NullInt32
-	Comment    sql.NullString
+	ID         string         `json:"id"`
+	UserID     string         `json:"user_id"`
+	PropertyID string         `json:"property_id"`
+	Rating     sql.NullInt32  `json:"rating"`
+	Comment    sql.NullString `json:"comment"`
 }
 
 func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (sql.Result, error) {
@@ -46,12 +46,12 @@ WHERE reviews.id = ? AND reviews.deleted_at IS NULL
 `
 
 type GetReviewByIDRow struct {
-	ReviewID   string
-	UserID     string
-	PropertyID string
-	Rating     sql.NullInt32
-	Comment    sql.NullString
-	CreatedAt  sql.NullTime
+	ReviewID   string         `json:"review_id"`
+	UserID     string         `json:"user_id"`
+	PropertyID string         `json:"property_id"`
+	Rating     sql.NullInt32  `json:"rating"`
+	Comment    sql.NullString `json:"comment"`
+	CreatedAt  sql.NullTime   `json:"created_at"`
 }
 
 func (q *Queries) GetReviewByID(ctx context.Context, id string) (GetReviewByIDRow, error) {
@@ -85,19 +85,19 @@ LIMIT ? OFFSET ?
 `
 
 type ListReviewsByPropertyParams struct {
-	PropertyID string
-	Limit      int32
-	Offset     int32
+	PropertyID string `json:"property_id"`
+	Limit      int32  `json:"limit"`
+	Offset     int32  `json:"offset"`
 }
 
 type ListReviewsByPropertyRow struct {
-	ReviewID   string
-	UserID     string
-	PropertyID string
-	Rating     sql.NullInt32
-	Comment    sql.NullString
-	CreatedAt  sql.NullTime
-	AvgRating  interface{}
+	ReviewID   string         `json:"review_id"`
+	UserID     string         `json:"user_id"`
+	PropertyID string         `json:"property_id"`
+	Rating     sql.NullInt32  `json:"rating"`
+	Comment    sql.NullString `json:"comment"`
+	CreatedAt  sql.NullTime   `json:"created_at"`
+	AvgRating  interface{}    `json:"avg_rating"`
 }
 
 func (q *Queries) ListReviewsByProperty(ctx context.Context, arg ListReviewsByPropertyParams) ([]ListReviewsByPropertyRow, error) {
@@ -147,9 +147,9 @@ WHERE id = ? AND deleted_at IS NULL
 `
 
 type UpdateReviewParams struct {
-	Rating  sql.NullInt32
-	Comment sql.NullString
-	ID      string
+	Rating  sql.NullInt32  `json:"rating"`
+	Comment sql.NullString `json:"comment"`
+	ID      string         `json:"id"`
 }
 
 func (q *Queries) UpdateReview(ctx context.Context, arg UpdateReviewParams) error {

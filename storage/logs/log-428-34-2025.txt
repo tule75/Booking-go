@@ -1,3 +1,0 @@
-{"level":"INFO","Time":"2025-03-04T17:28:25.740+0700","caller":"initialize/run.go:14","msg":"Config ok roif: ","Ok":"success"}
-{"level":"INFO","Time":"2025-03-04T17:28:25.756+0700","caller":"initialize/mysql.go:27","msg":"Initializing MySQL Successfully"}
-{"level":"INFO","Time":"2025-03-04T17:28:26.283+0700","caller":"initialize/redis.go:51","msg":"redis get result: ","foo":"bar"}

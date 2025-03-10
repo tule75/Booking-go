@@ -39,3 +39,12 @@ func BadResponse(c *gin.Context, code int) {
 		Data:    nil,
 	})
 }
+
+func UnauthorizedResponse(c *gin.Context, code int) {
+	c.JSON(http.StatusUnauthorized, ResponseData{
+		Code:    code,
+		Message: msg[code],
+		Data:    nil,
+	})
+	c.Abort()
+}

@@ -17,10 +17,10 @@ VALUES (?, ?, ?, ?)
 `
 
 type CreateAvailabilityParams struct {
-	ID          string
-	RoomID      string
-	Date        time.Time
-	IsAvailable sql.NullBool
+	ID          string       `json:"id"`
+	RoomID      string       `json:"room_id"`
+	Date        time.Time    `json:"date"`
+	IsAvailable sql.NullBool `json:"is_available"`
 }
 
 func (q *Queries) CreateAvailability(ctx context.Context, arg CreateAvailabilityParams) (sql.Result, error) {
@@ -43,10 +43,10 @@ WHERE availability.id = ? AND availability.deleted_at IS NULL
 `
 
 type GetAvailabilityByIDRow struct {
-	AvailabilityID string
-	RoomID         string
-	Date           time.Time
-	IsAvailable    sql.NullBool
+	AvailabilityID string       `json:"availability_id"`
+	RoomID         string       `json:"room_id"`
+	Date           time.Time    `json:"date"`
+	IsAvailable    sql.NullBool `json:"is_available"`
 }
 
 func (q *Queries) GetAvailabilityByID(ctx context.Context, id string) (GetAvailabilityByIDRow, error) {
@@ -75,16 +75,16 @@ ORDER BY availability.date ASC
 `
 
 type ListAvailabilityByRoomAndDateRangeParams struct {
-	RoomID   string
-	FromDate time.Time
-	ToDate   time.Time
+	RoomID   string    `json:"room_id"`
+	FromDate time.Time `json:"from_date"`
+	ToDate   time.Time `json:"to_date"`
 }
 
 type ListAvailabilityByRoomAndDateRangeRow struct {
-	AvailabilityID string
-	RoomID         string
-	Date           time.Time
-	IsAvailable    sql.NullBool
+	AvailabilityID string       `json:"availability_id"`
+	RoomID         string       `json:"room_id"`
+	Date           time.Time    `json:"date"`
+	IsAvailable    sql.NullBool `json:"is_available"`
 }
 
 func (q *Queries) ListAvailabilityByRoomAndDateRange(ctx context.Context, arg ListAvailabilityByRoomAndDateRangeParams) ([]ListAvailabilityByRoomAndDateRangeRow, error) {
@@ -122,8 +122,8 @@ WHERE id = ? AND deleted_at IS NULL
 `
 
 type UpdateAvailabilityParams struct {
-	IsAvailable sql.NullBool
-	ID          string
+	IsAvailable sql.NullBool `json:"is_available"`
+	ID          string       `json:"id"`
 }
 
 func (q *Queries) UpdateAvailability(ctx context.Context, arg UpdateAvailabilityParams) error {

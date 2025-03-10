@@ -16,10 +16,10 @@ VALUES (?, ?, ?, ?)
 `
 
 type CreateNotificationParams struct {
-	ID      string
-	UserID  string
-	Message string
-	IsRead  sql.NullBool
+	ID      string       `json:"id"`
+	UserID  string       `json:"user_id"`
+	Message string       `json:"message"`
+	IsRead  sql.NullBool `json:"is_read"`
 }
 
 func (q *Queries) CreateNotification(ctx context.Context, arg CreateNotificationParams) (sql.Result, error) {
@@ -43,11 +43,11 @@ WHERE notifications.id = ? AND notifications.deleted_at IS NULL
 `
 
 type GetNotificationByIDRow struct {
-	NotificationID string
-	UserID         string
-	Message        string
-	IsRead         sql.NullBool
-	CreatedAt      sql.NullTime
+	NotificationID string       `json:"notification_id"`
+	UserID         string       `json:"user_id"`
+	Message        string       `json:"message"`
+	IsRead         sql.NullBool `json:"is_read"`
+	CreatedAt      sql.NullTime `json:"created_at"`
 }
 
 func (q *Queries) GetNotificationByID(ctx context.Context, id string) (GetNotificationByIDRow, error) {
@@ -79,19 +79,19 @@ LIMIT ? OFFSET ?
 `
 
 type ListNotificationsByUserParams struct {
-	UserID  string
-	Column2 interface{}
-	IsRead  sql.NullBool
-	Limit   int32
-	Offset  int32
+	UserID  string       `json:"user_id"`
+	Column2 interface{}  `json:"column_2"`
+	IsRead  sql.NullBool `json:"is_read"`
+	Limit   int32        `json:"limit"`
+	Offset  int32        `json:"offset"`
 }
 
 type ListNotificationsByUserRow struct {
-	NotificationID string
-	UserID         string
-	Message        string
-	IsRead         sql.NullBool
-	CreatedAt      sql.NullTime
+	NotificationID string       `json:"notification_id"`
+	UserID         string       `json:"user_id"`
+	Message        string       `json:"message"`
+	IsRead         sql.NullBool `json:"is_read"`
+	CreatedAt      sql.NullTime `json:"created_at"`
 }
 
 func (q *Queries) ListNotificationsByUser(ctx context.Context, arg ListNotificationsByUserParams) ([]ListNotificationsByUserRow, error) {

@@ -16,13 +16,13 @@ VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreatePaymentParams struct {
-	ID                    string
-	BookingID             string
-	UserID                string
-	Amount                string
-	PaymentMethod         NullPaymentsPaymentMethod
-	Status                NullPaymentsStatus
-	StripePaymentIntentID sql.NullString
+	ID                    string                    `json:"id"`
+	BookingID             string                    `json:"booking_id"`
+	UserID                string                    `json:"user_id"`
+	Amount                string                    `json:"amount"`
+	PaymentMethod         NullPaymentsPaymentMethod `json:"payment_method"`
+	Status                NullPaymentsStatus        `json:"status"`
+	StripePaymentIntentID sql.NullString            `json:"stripe_payment_intent_id"`
 }
 
 func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (sql.Result, error) {
@@ -52,14 +52,14 @@ WHERE payments.id = ? AND payments.deleted_at IS NULL
 `
 
 type GetPaymentByIDRow struct {
-	PaymentID             string
-	BookingID             string
-	UserID                string
-	Amount                string
-	PaymentMethod         NullPaymentsPaymentMethod
-	Status                NullPaymentsStatus
-	StripePaymentIntentID sql.NullString
-	CreatedAt             sql.NullTime
+	PaymentID             string                    `json:"payment_id"`
+	BookingID             string                    `json:"booking_id"`
+	UserID                string                    `json:"user_id"`
+	Amount                string                    `json:"amount"`
+	PaymentMethod         NullPaymentsPaymentMethod `json:"payment_method"`
+	Status                NullPaymentsStatus        `json:"status"`
+	StripePaymentIntentID sql.NullString            `json:"stripe_payment_intent_id"`
+	CreatedAt             sql.NullTime              `json:"created_at"`
 }
 
 func (q *Queries) GetPaymentByID(ctx context.Context, id string) (GetPaymentByIDRow, error) {
@@ -97,22 +97,22 @@ LIMIT ? OFFSET ?
 `
 
 type ListPaymentsByUserParams struct {
-	UserID        string
-	Column2       interface{}
-	PaymentMethod NullPaymentsPaymentMethod
-	Limit         int32
-	Offset        int32
+	UserID        string                    `json:"user_id"`
+	Column2       interface{}               `json:"column_2"`
+	PaymentMethod NullPaymentsPaymentMethod `json:"payment_method"`
+	Limit         int32                     `json:"limit"`
+	Offset        int32                     `json:"offset"`
 }
 
 type ListPaymentsByUserRow struct {
-	PaymentID             string
-	BookingID             string
-	UserID                string
-	Amount                string
-	PaymentMethod         NullPaymentsPaymentMethod
-	Status                NullPaymentsStatus
-	StripePaymentIntentID sql.NullString
-	CreatedAt             sql.NullTime
+	PaymentID             string                    `json:"payment_id"`
+	BookingID             string                    `json:"booking_id"`
+	UserID                string                    `json:"user_id"`
+	Amount                string                    `json:"amount"`
+	PaymentMethod         NullPaymentsPaymentMethod `json:"payment_method"`
+	Status                NullPaymentsStatus        `json:"status"`
+	StripePaymentIntentID sql.NullString            `json:"stripe_payment_intent_id"`
+	CreatedAt             sql.NullTime              `json:"created_at"`
 }
 
 func (q *Queries) ListPaymentsByUser(ctx context.Context, arg ListPaymentsByUserParams) ([]ListPaymentsByUserRow, error) {
@@ -169,8 +169,8 @@ WHERE id = ? AND deleted_at IS NULL
 `
 
 type UpdatePaymentStatusParams struct {
-	Status NullPaymentsStatus
-	ID     string
+	Status NullPaymentsStatus `json:"status"`
+	ID     string             `json:"id"`
 }
 
 func (q *Queries) UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) error {

@@ -16,7 +16,7 @@ type LoggerZap struct {
 }
 
 func NewLogger(logSetting setting.LogSetting) *LoggerZap {
-	timeNow := time.Now().Format("24-12-2006")
+	timeNow := time.Now().Format("02-01-2006")
 	filePath := fmt.Sprintf(logSetting.FileLogName, timeNow)
 	logLevel := logSetting.LogLevel
 	var level zapcore.Level

@@ -1,0 +1,16 @@
+{"level":"INFO","Time":"2025-03-07T17:01:41.338+0700","caller":"initialize/run.go:15","msg":"Config ok roif: ","Ok":"success"}
+{"level":"INFO","Time":"2025-03-07T17:01:41.471+0700","caller":"initialize/mysql.go:27","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-07T17:01:42.122+0700","caller":"initialize/mysqlc.go:25","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-07T17:01:42.528+0700","caller":"initialize/redis.go:51","msg":"redis get result: ","foo":"bar"}
+{"level":"INFO","Time":"2025-03-07T17:21:13.896+0700","caller":"initialize/run.go:15","msg":"Config ok roif: ","Ok":"success"}
+{"level":"INFO","Time":"2025-03-07T17:21:14.040+0700","caller":"initialize/mysql.go:27","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-07T17:21:14.747+0700","caller":"initialize/mysqlc.go:25","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-07T17:21:15.024+0700","caller":"initialize/redis.go:51","msg":"redis get result: ","foo":"bar"}
+{"level":"INFO","Time":"2025-03-07T17:26:00.883+0700","caller":"initialize/run.go:15","msg":"Config ok roif: ","Ok":"success"}
+{"level":"INFO","Time":"2025-03-07T17:26:00.932+0700","caller":"initialize/mysql.go:27","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-07T17:26:01.570+0700","caller":"initialize/mysqlc.go:25","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-07T17:26:01.874+0700","caller":"initialize/redis.go:51","msg":"redis get result: ","foo":"bar"}
+{"level":"INFO","Time":"2025-03-07T17:39:44.608+0700","caller":"initialize/run.go:15","msg":"Config ok roif: ","Ok":"success"}
+{"level":"INFO","Time":"2025-03-07T17:39:44.645+0700","caller":"initialize/mysql.go:27","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-07T17:39:45.097+0700","caller":"initialize/mysqlc.go:25","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-07T17:39:45.369+0700","caller":"initialize/redis.go:51","msg":"redis get result: ","foo":"bar"}

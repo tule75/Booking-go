@@ -17,15 +17,15 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateBookingParams struct {
-	ID         string
-	UserID     string
-	PropertyID string
-	RoomID     sql.NullString
-	CheckIn    time.Time
-	CheckOut   time.Time
-	Guests     int32
-	TotalPrice string
-	Status     NullBookingsStatus
+	ID         string             `json:"id"`
+	UserID     string             `json:"user_id"`
+	PropertyID string             `json:"property_id"`
+	RoomID     sql.NullString     `json:"room_id"`
+	CheckIn    time.Time          `json:"check_in"`
+	CheckOut   time.Time          `json:"check_out"`
+	Guests     int32              `json:"guests"`
+	TotalPrice string             `json:"total_price"`
+	Status     NullBookingsStatus `json:"status"`
 }
 
 func (q *Queries) CreateBooking(ctx context.Context, arg CreateBookingParams) (sql.Result, error) {
@@ -59,16 +59,16 @@ WHERE bookings.id = ? AND bookings.deleted_at IS NULL
 `
 
 type GetBookingByIDRow struct {
-	BookingID  string
-	UserID     string
-	PropertyID string
-	RoomID     sql.NullString
-	CheckIn    time.Time
-	CheckOut   time.Time
-	Guests     int32
-	TotalPrice string
-	Status     NullBookingsStatus
-	CreatedAt  sql.NullTime
+	BookingID  string             `json:"booking_id"`
+	UserID     string             `json:"user_id"`
+	PropertyID string             `json:"property_id"`
+	RoomID     sql.NullString     `json:"room_id"`
+	CheckIn    time.Time          `json:"check_in"`
+	CheckOut   time.Time          `json:"check_out"`
+	Guests     int32              `json:"guests"`
+	TotalPrice string             `json:"total_price"`
+	Status     NullBookingsStatus `json:"status"`
+	CreatedAt  sql.NullTime       `json:"created_at"`
 }
 
 func (q *Queries) GetBookingByID(ctx context.Context, id string) (GetBookingByIDRow, error) {
@@ -112,28 +112,28 @@ LIMIT ? OFFSET ?
 `
 
 type ListBookingsByUserParams struct {
-	UserID   string
-	Column2  interface{}
-	Status   NullBookingsStatus
-	Column4  interface{}
-	CheckIn  time.Time
-	Column6  interface{}
-	CheckOut time.Time
-	Limit    int32
-	Offset   int32
+	UserID   string             `json:"user_id"`
+	Column2  interface{}        `json:"column_2"`
+	Status   NullBookingsStatus `json:"status"`
+	Column4  interface{}        `json:"column_4"`
+	CheckIn  time.Time          `json:"check_in"`
+	Column6  interface{}        `json:"column_6"`
+	CheckOut time.Time          `json:"check_out"`
+	Limit    int32              `json:"limit"`
+	Offset   int32              `json:"offset"`
 }
 
 type ListBookingsByUserRow struct {
-	BookingID  string
-	UserID     string
-	PropertyID string
-	RoomID     sql.NullString
-	CheckIn    time.Time
-	CheckOut   time.Time
-	Guests     int32
-	TotalPrice string
-	Status     NullBookingsStatus
-	CreatedAt  sql.NullTime
+	BookingID  string             `json:"booking_id"`
+	UserID     string             `json:"user_id"`
+	PropertyID string             `json:"property_id"`
+	RoomID     sql.NullString     `json:"room_id"`
+	CheckIn    time.Time          `json:"check_in"`
+	CheckOut   time.Time          `json:"check_out"`
+	Guests     int32              `json:"guests"`
+	TotalPrice string             `json:"total_price"`
+	Status     NullBookingsStatus `json:"status"`
+	CreatedAt  sql.NullTime       `json:"created_at"`
 }
 
 func (q *Queries) ListBookingsByUser(ctx context.Context, arg ListBookingsByUserParams) ([]ListBookingsByUserRow, error) {
@@ -196,12 +196,12 @@ WHERE id = ? AND deleted_at IS NULL
 `
 
 type UpdateBookingParams struct {
-	CheckIn    time.Time
-	CheckOut   time.Time
-	Guests     int32
-	TotalPrice string
-	Status     NullBookingsStatus
-	ID         string
+	CheckIn    time.Time          `json:"check_in"`
+	CheckOut   time.Time          `json:"check_out"`
+	Guests     int32              `json:"guests"`
+	TotalPrice string             `json:"total_price"`
+	Status     NullBookingsStatus `json:"status"`
+	ID         string             `json:"id"`
 }
 
 func (q *Queries) UpdateBooking(ctx context.Context, arg UpdateBookingParams) error {

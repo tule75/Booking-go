@@ -16,12 +16,12 @@ VALUES (?, ?, ?, ?, ?, ?)
 `
 
 type CreateRoomParams struct {
-	ID          string
-	PropertyID  string
-	Name        sql.NullString
-	Price       string
-	MaxGuests   int32
-	IsAvailable sql.NullBool
+	ID          string         `json:"id"`
+	PropertyID  string         `json:"property_id"`
+	Name        sql.NullString `json:"name"`
+	Price       string         `json:"price"`
+	MaxGuests   int32          `json:"max_guests"`
+	IsAvailable sql.NullBool   `json:"is_available"`
 }
 
 func (q *Queries) CreateRoom(ctx context.Context, arg CreateRoomParams) (sql.Result, error) {
@@ -49,13 +49,13 @@ WHERE rooms.id = ? AND rooms.deleted_at IS NULL
 `
 
 type GetRoomByIDRow struct {
-	RoomID      string
-	PropertyID  string
-	Name        sql.NullString
-	Price       string
-	MaxGuests   int32
-	IsAvailable sql.NullBool
-	CreatedAt   sql.NullTime
+	RoomID      string         `json:"room_id"`
+	PropertyID  string         `json:"property_id"`
+	Name        sql.NullString `json:"name"`
+	Price       string         `json:"price"`
+	MaxGuests   int32          `json:"max_guests"`
+	IsAvailable sql.NullBool   `json:"is_available"`
+	CreatedAt   sql.NullTime   `json:"created_at"`
 }
 
 func (q *Queries) GetRoomByID(ctx context.Context, id string) (GetRoomByIDRow, error) {
@@ -89,19 +89,19 @@ LIMIT ? OFFSET ?
 `
 
 type ListRoomsByPropertyParams struct {
-	PropertyID string
-	Limit      int32
-	Offset     int32
+	PropertyID string `json:"property_id"`
+	Limit      int32  `json:"limit"`
+	Offset     int32  `json:"offset"`
 }
 
 type ListRoomsByPropertyRow struct {
-	RoomID      string
-	PropertyID  string
-	Name        sql.NullString
-	Price       string
-	MaxGuests   int32
-	IsAvailable sql.NullBool
-	CreatedAt   sql.NullTime
+	RoomID      string         `json:"room_id"`
+	PropertyID  string         `json:"property_id"`
+	Name        sql.NullString `json:"name"`
+	Price       string         `json:"price"`
+	MaxGuests   int32          `json:"max_guests"`
+	IsAvailable sql.NullBool   `json:"is_available"`
+	CreatedAt   sql.NullTime   `json:"created_at"`
 }
 
 func (q *Queries) ListRoomsByProperty(ctx context.Context, arg ListRoomsByPropertyParams) ([]ListRoomsByPropertyRow, error) {
@@ -151,11 +151,11 @@ WHERE id = ? AND deleted_at IS NULL
 `
 
 type UpdateRoomParams struct {
-	Name        sql.NullString
-	Price       string
-	MaxGuests   int32
-	IsAvailable sql.NullBool
-	ID          string
+	Name        sql.NullString `json:"name"`
+	Price       string         `json:"price"`
+	MaxGuests   int32          `json:"max_guests"`
+	IsAvailable sql.NullBool   `json:"is_available"`
+	ID          string         `json:"id"`
 }
 
 func (q *Queries) UpdateRoom(ctx context.Context, arg UpdateRoomParams) error {

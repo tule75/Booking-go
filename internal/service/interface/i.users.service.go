@@ -10,7 +10,7 @@ type IUserLogin interface {
 	Register(ctx context.Context, request *requestDTO.RegisterRequestModel) (int, error)
 	VerifyOTP(ctx context.Context, in *requestDTO.VerifyRequest) (out responseDTO.VerifyOTPResponse, err error)
 	Login(ctx context.Context, request *requestDTO.LoginRequestModel) (int, responseDTO.LoginResponse, error)
-	UpdatePasswordRegister(ctx context.Context, in *requestDTO.UserCreateRequestModel) (userId int, err error)
+	UpdatePasswordRegister(ctx context.Context, in *requestDTO.UserCreateRequestModel) (userId string, code int, err error)
 }
 
 type IUserCustomer interface{}

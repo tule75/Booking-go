@@ -16,14 +16,14 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateUserCardParams struct {
-	ID               string
-	UserID           string
-	StripeCustomerID string
-	StripeCardID     string
-	Last4            string
-	Brand            string
-	ExpMonth         int32
-	ExpYear          int32
+	ID               string `json:"id"`
+	UserID           string `json:"user_id"`
+	StripeCustomerID string `json:"stripe_customer_id"`
+	StripeCardID     string `json:"stripe_card_id"`
+	Last4            string `json:"last4"`
+	Brand            string `json:"brand"`
+	ExpMonth         int32  `json:"exp_month"`
+	ExpYear          int32  `json:"exp_year"`
 }
 
 func (q *Queries) CreateUserCard(ctx context.Context, arg CreateUserCardParams) (sql.Result, error) {
@@ -55,15 +55,15 @@ WHERE user_cards.user_id = ? AND user_cards.deleted_at IS NULL
 `
 
 type GetUserCardsRow struct {
-	CardID           string
-	UserID           string
-	StripeCustomerID string
-	StripeCardID     string
-	Last4            string
-	Brand            string
-	ExpMonth         int32
-	ExpYear          int32
-	CreatedAt        sql.NullTime
+	CardID           string       `json:"card_id"`
+	UserID           string       `json:"user_id"`
+	StripeCustomerID string       `json:"stripe_customer_id"`
+	StripeCardID     string       `json:"stripe_card_id"`
+	Last4            string       `json:"last4"`
+	Brand            string       `json:"brand"`
+	ExpMonth         int32        `json:"exp_month"`
+	ExpYear          int32        `json:"exp_year"`
+	CreatedAt        sql.NullTime `json:"created_at"`
 }
 
 func (q *Queries) GetUserCards(ctx context.Context, userID string) ([]GetUserCardsRow, error) {
@@ -104,8 +104,8 @@ UPDATE user_cards SET deleted_at = NOW() WHERE id = ? AND user_id = ?
 `
 
 type SoftDeleteUserCardParams struct {
-	ID     string
-	UserID string
+	ID     string `json:"id"`
+	UserID string `json:"user_id"`
 }
 
 func (q *Queries) SoftDeleteUserCard(ctx context.Context, arg SoftDeleteUserCardParams) error {
@@ -120,14 +120,14 @@ WHERE id = ? AND user_id = ? AND deleted_at IS NULL
 `
 
 type UpdateUserCardParams struct {
-	StripeCustomerID string
-	StripeCardID     string
-	Last4            string
-	Brand            string
-	ExpMonth         int32
-	ExpYear          int32
-	ID               string
-	UserID           string
+	StripeCustomerID string `json:"stripe_customer_id"`
+	StripeCardID     string `json:"stripe_card_id"`
+	Last4            string `json:"last4"`
+	Brand            string `json:"brand"`
+	ExpMonth         int32  `json:"exp_month"`
+	ExpYear          int32  `json:"exp_year"`
+	ID               string `json:"id"`
+	UserID           string `json:"user_id"`
 }
 
 func (q *Queries) UpdateUserCard(ctx context.Context, arg UpdateUserCardParams) error {

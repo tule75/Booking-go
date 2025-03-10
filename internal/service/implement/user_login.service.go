@@ -15,12 +15,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 type UserLogin struct {
@@ -78,11 +78,11 @@ func (ul *UserLogin) VerifyOTP(ctx context.Context, in *requestDTO.VerifyRequest
 	return out, err
 }
 
-func (s *UserLogin) UpdatePasswordRegister(ctx context.Context, in *requestDTO.UserCreateRequestModel) (userId int, err error) {
+func (s *UserLogin) UpdatePasswordRegister(ctx context.Context, in *requestDTO.UserCreateRequestModel) (userId string, code int, err error) {
 	hashKey, _ := crypto.GetHash(strings.ToLower(in.Email))
 
 	if hashKey != in.Token {
-		return 0, fmt.Errorf("wrong token or email to set password")
+		return "", 0, fmt.Errorf("wrong token or email to set password")
 	}
 
 	user := database.CreateUserParams{}
@@ -90,7 +90,7 @@ func (s *UserLogin) UpdatePasswordRegister(ctx context.Context, in *requestDTO.U
 	user.Email = in.Email
 	userSalt, err := crypto.GenerateSalt(16)
 	if err != nil {
-		return response.ErrCodeAuthFailed, err
+		return "", response.ErrCodeAuthFailed, err
 	}
 	user.Salt = userSalt
 	user.Password = crypto.HashPassword(in.Password, userSalt)
@@ -98,16 +98,12 @@ func (s *UserLogin) UpdatePasswordRegister(ctx context.Context, in *requestDTO.U
 	user.Role = database.NullUsersRole{UsersRole: database.UsersRole(in.Role)}
 	// add userBase to user_base table
 	newUser, err := s.sqlc.CreateUser(ctx, user)
-	log.Println("new User::", newUser, user)
+	global.Logger.Info("new User::", zap.Any("result::", newUser), zap.Any("value::", user))
 	if err != nil {
-		return response.CannotCreateUser, err
-	}
-	user_id, err := newUser.LastInsertId()
-	if err != nil {
-		return response.CannotCreateUser, err
+		return "", response.CannotCreateUser, err
 	}
 
-	return int(user_id), nil
+	return user.ID, response.SuccessResponseCode, nil
 }
 
 func (ul UserLogin) Login(ctx context.Context, request *requestDTO.LoginRequestModel) (rCode int, out responseDTO.LoginResponse, e error) {
@@ -120,8 +116,8 @@ func (ul UserLogin) Login(ctx context.Context, request *requestDTO.LoginRequestM
 		return response.FalsePasswordResponseCode, out, errors.New("invalid password")
 	}
 
-	// convert to json
 	infoUserJson, err := json.Marshal(user)
+	// convert to json
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, fmt.Errorf("convert to json failed: %v", err)
 	}

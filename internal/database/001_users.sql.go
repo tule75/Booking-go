@@ -27,13 +27,13 @@ VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateUserParams struct {
-	ID       string
-	FullName string
-	Email    string
-	Password string
-	Phone    sql.NullString
-	Role     NullUsersRole
-	Salt     string
+	ID       string         `json:"id"`
+	FullName string         `json:"full_name"`
+	Email    string         `json:"email"`
+	Password string         `json:"password"`
+	Phone    sql.NullString `json:"phone"`
+	Role     NullUsersRole  `json:"role"`
+	Salt     string         `json:"salt"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error) {
@@ -63,14 +63,14 @@ WHERE ` + "`" + `users` + "`" + `.email = ? AND ` + "`" + `users` + "`" + `.dele
 `
 
 type GetUserByEmailRow struct {
-	UserID    string
-	FullName  string
-	Email     string
-	Password  string
-	Phone     sql.NullString
-	Role      NullUsersRole
-	CreatedAt sql.NullTime
-	Salt      string
+	UserID    string         `json:"user_id"`
+	FullName  string         `json:"full_name"`
+	Email     string         `json:"email"`
+	Password  string         `json:"password"`
+	Phone     sql.NullString `json:"phone"`
+	Role      NullUsersRole  `json:"role"`
+	CreatedAt sql.NullTime   `json:"created_at"`
+	Salt      string         `json:"salt"`
 }
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error) {
@@ -104,14 +104,14 @@ WHERE ` + "`" + `users` + "`" + `.id = ? AND ` + "`" + `users` + "`" + `.deleted
 `
 
 type GetUserByIDRow struct {
-	UserID    string
-	FullName  string
-	Email     string
-	Password  string
-	Phone     sql.NullString
-	Role      NullUsersRole
-	CreatedAt sql.NullTime
-	Salt      string
+	UserID    string         `json:"user_id"`
+	FullName  string         `json:"full_name"`
+	Email     string         `json:"email"`
+	Password  string         `json:"password"`
+	Phone     sql.NullString `json:"phone"`
+	Role      NullUsersRole  `json:"role"`
+	CreatedAt sql.NullTime   `json:"created_at"`
+	Salt      string         `json:"salt"`
 }
 
 func (q *Queries) GetUserByID(ctx context.Context, id string) (GetUserByIDRow, error) {
@@ -146,12 +146,12 @@ WHERE id = ? AND deleted_at IS NULL
 `
 
 type UpdateUserParams struct {
-	FullName string
-	Email    string
-	Password string
-	Phone    sql.NullString
-	Role     NullUsersRole
-	ID       string
+	FullName string         `json:"full_name"`
+	Email    string         `json:"email"`
+	Password string         `json:"password"`
+	Phone    sql.NullString `json:"phone"`
+	Role     NullUsersRole  `json:"role"`
+	ID       string         `json:"id"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {

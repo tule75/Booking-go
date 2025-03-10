@@ -11,5 +11,6 @@ func InitServices() {
 	queries := database.New(global.Mdbc)
 	// User Service Interface
 	iservice.InitUserLogin(service.NewUserLogin(queries))
+	iservice.InitProperty(service.NewPropertiesService(queries))
 
 }
