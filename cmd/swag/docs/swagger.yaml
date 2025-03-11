@@ -7,6 +7,8 @@ definitions:
       password:
         type: string
     type: object
+  requestDTO.PropertyCreateRequest:
+    type: object
   requestDTO.RegisterRequestModel:
     properties:
       code:
@@ -67,6 +69,50 @@ info:
   title: Booking Go
   version: "1.0"
 paths:
+  /properties:
+    post:
+      consumes:
+      - application/json
+      description: Create a new property
+      parameters:
+      - description: param
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestDTO.PropertyCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Create a new property
+      tags:
+      - properties management
+  /properties/owner/:id:
+    get:
+      consumes:
+      - application/json
+      description: GetPropertiesByOwnerID
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestDTO.PropertyCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: GetPropertiesByOwnerID
+      tags:
+      - properties management
   /users/create-password:
     post:
       consumes:

@@ -21,6 +21,7 @@ func InitRouter() *gin.Engine {
 
 	manageRouter := Router.RouterAppGroup.AdminGroupRouter
 	userRouter := Router.RouterAppGroup.UserGroupRouter
+	propertiesRouter := Router.RouterAppGroup.PropertiesGroupRouter
 
 	MainGroup := r.Group("/v1/2025")
 	{
@@ -29,6 +30,9 @@ func InitRouter() *gin.Engine {
 	{
 		manageRouter.InitUserRouter(MainGroup)
 		manageRouter.InitAdminRouter(MainGroup)
+	}
+	{
+		propertiesRouter.InitPropertiesRouter(MainGroup)
 	}
 
 	return r

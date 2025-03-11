@@ -12,5 +12,5 @@ func InitServices() {
 	// User Service Interface
 	iservice.InitUserLogin(service.NewUserLogin(queries))
 	iservice.InitProperty(service.NewPropertiesService(queries))
-
+	iservice.InitRoom(service.NewRoomService(queries))
 }

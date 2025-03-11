@@ -24,6 +24,74 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/properties": {
+            "post": {
+                "description": "Create a new property",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "properties management"
+                ],
+                "summary": "Create a new property",
+                "parameters": [
+                    {
+                        "description": "param",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requestDTO.PropertyCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ResponseData"
+                        }
+                    }
+                }
+            }
+        },
+        "/properties/owner/:id": {
+            "get": {
+                "description": "GetPropertiesByOwnerID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "properties management"
+                ],
+                "summary": "GetPropertiesByOwnerID",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requestDTO.PropertyCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ResponseData"
+                        }
+                    }
+                }
+            }
+        },
         "/users/create-password": {
             "post": {
                 "description": "Verify OTP",
@@ -190,6 +258,9 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "requestDTO.PropertyCreateRequest": {
+            "type": "object"
         },
         "requestDTO.RegisterRequestModel": {
             "type": "object",

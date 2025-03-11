@@ -11,8 +11,12 @@ SELECT
   properties.location,
   properties.price,
   properties.amenities,
-  properties.created_at
-FROM properties
+  properties.created_at,
+  COALESCE(
+    JSON_ARRAYAGG(
+      JSON_OBJECT('id', v.id, 'name', v.name, 'price', v.price, 'max_guests', v.max_guests, 'is_available', v.is_available)),
+    '[]') AS rooms
+FROM properties LEFT JOIN rooms v ON properties.id = rooms.property_id
 WHERE properties.id = ? AND properties.deleted_at IS NULL;
 
 -- name: SearchProperties :many

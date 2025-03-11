@@ -47,8 +47,12 @@ SELECT
   properties.location,
   properties.price,
   properties.amenities,
-  properties.created_at
-FROM properties
+  properties.created_at,
+  COALESCE(
+    JSON_ARRAYAGG(
+      JSON_OBJECT('id', v.id, 'name', v.name, 'price', v.price, 'max_guests', v.max_guests, 'is_available', v.is_available)),
+    '[]') AS rooms
+FROM properties LEFT JOIN rooms v ON properties.id = rooms.property_id
 WHERE properties.id = ? AND properties.deleted_at IS NULL
 `
 
@@ -61,6 +65,7 @@ type GetPropertyByIDRow struct {
 	Price       string          `json:"price"`
 	Amenities   json.RawMessage `json:"amenities"`
 	CreatedAt   sql.NullTime    `json:"created_at"`
+	Rooms       interface{}     `json:"rooms"`
 }
 
 func (q *Queries) GetPropertyByID(ctx context.Context, id string) (GetPropertyByIDRow, error) {
@@ -75,6 +80,7 @@ func (q *Queries) GetPropertyByID(ctx context.Context, id string) (GetPropertyBy
 		&i.Price,
 		&i.Amenities,
 		&i.CreatedAt,
+		&i.Rooms,
 	)
 	return i, err
 }

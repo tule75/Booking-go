@@ -46,5 +46,4 @@ func UnauthorizedResponse(c *gin.Context, code int) {
 		Message: msg[code],
 		Data:    nil,
 	})
-	c.Abort()
 }

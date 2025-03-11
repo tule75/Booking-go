@@ -12,6 +12,7 @@ type IPropertiesService interface {
 	SearchProperties(ctx context.Context, in database.SearchPropertiesParams) (out []database.SearchPropertiesRow, code int, err error)
 	GetPropertiesByOwner(ctx context.Context, in database.ListPropertiesByOwnerParams) (out []database.ListPropertiesByOwnerRow, code int, err error)
 	GetProperty(ctx context.Context, id string) (out database.GetPropertyByIDRow, code int, err error)
+	DeleteProperty(ctx context.Context, id string) (code int, err error)
 }
 
 var (

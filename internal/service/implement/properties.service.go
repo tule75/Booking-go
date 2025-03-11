@@ -128,12 +128,25 @@ func (ps *PropertiesService) UpdateProperty(ctx context.Context, in requestDTO.P
 		global.Logger.Error("Error creating property", zap.Error(err))
 		return "", response.CannotCreatePropertyCode, err
 	}
-	global.Logger.Info("Update User success::", zap.Any("value::", updateProperty))
+	global.Logger.Info("Update Properties success::", zap.Any("value::", updateProperty))
 
 	defer redis.DeleteCache(ctx, constant.PrePropertiesOwner, in.OwnerID)
 	defer redis.DeleteCache(ctx, constant.PrePropertiesId, in.ID)
 
 	return updateProperty.ID, response.SuccessResponseCode, nil
+}
+
+func (ps *PropertiesService) DeleteProperty(ctx context.Context, id string) (code int, err error) {
+	err = ps.sqlc.SoftDeleteProperty(ctx, id)
+
+	if err != nil {
+		global.Logger.Error("Delete Property failed", zap.Error(err))
+		return response.CannotCreatePropertyCode, err
+	}
+	global.Logger.Info("Delete Property success::", zap.Any("property id::", id))
+
+	defer redis.DeleteCache(ctx, constant.PrePropertiesId, id)
+	return response.SuccessResponseCode, nil
 }
 
 func NewPropertiesService(r *database.Queries) iservice.IPropertiesService {

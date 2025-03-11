@@ -24,10 +24,9 @@ func (r *PropertyRouter) InitPropertiesRouter(Router *gin.RouterGroup) {
 	userPrivateRouter.Use(middleware.AuthenticationMiddleware())
 	userPrivateRouter.Use(middleware.Authorization([]string{"ADMIN", "HOST"}))
 	{
-		userPrivateRouter.GET("/owner/:id", uc.GetPropertiesByOwnerID)
-		userPrivateRouter.GET("/:id", uc.GetPropertyByID)
-		userPrivateRouter.POST("/filter", uc.SearchProperties)
+		userPrivateRouter.GET("/owner/current_user", uc.GetPropertiesByOwnerID)
 		userPrivateRouter.POST("/", uc.CreateProperty)
 		userPrivateRouter.PUT("/", uc.UpdateProperty)
+		userPrivateRouter.DELETE("/", uc.DeleteProperty)
 	}
 }

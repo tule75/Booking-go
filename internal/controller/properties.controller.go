@@ -5,8 +5,8 @@ import (
 	requestDTO "ecommerce_go/internal/models/request"
 	iservice "ecommerce_go/internal/service/interface"
 	"ecommerce_go/internal/utils/auth"
+	"ecommerce_go/internal/utils/query"
 	"ecommerce_go/pkg/response"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +18,7 @@ type IPropertiesController interface {
 	GetPropertyByID(ctx *gin.Context)
 	GetPropertiesByOwnerID(ctx *gin.Context)
 	SearchProperties(ctx *gin.Context)
+	DeleteProperty(ctx *gin.Context)
 }
 
 type PropertiesController struct {
@@ -25,6 +26,16 @@ type PropertiesController struct {
 }
 
 // CreateProperty implements IPropertiesController.
+// Register implements IPropertiesController.
+// Register godoc
+// @Summary      Create a new property
+// @Description  Create a new property
+// @Tags         properties management
+// @Accept       json
+// @Produce      json
+// @Param        payload body requestDTO.PropertyCreateRequest true "param"
+// @Success      200  {object}  response.ResponseData
+// @Router       /properties [POST]
 func (p *PropertiesController) CreateProperty(ctx *gin.Context) {
 	var in requestDTO.PropertyCreateRequest
 
@@ -45,22 +56,21 @@ func (p *PropertiesController) CreateProperty(ctx *gin.Context) {
 }
 
 // GetPropertiesByOwnerID implements IPropertiesController.
+// Register implements IPropertiesController.
+// Register godoc
+// @Summary      GetPropertiesByOwnerID
+// @Description  GetPropertiesByOwnerID
+// @Tags         properties management
+// @Accept       json
+// @Produce      json
+// @Param        payload body requestDTO.PropertyCreateRequest true "payload"
+// @Success      200  {object}  response.ResponseData
+// @Router       /properties/owner/:id [GET]
 func (p *PropertiesController) GetPropertiesByOwnerID(ctx *gin.Context) {
 	var in database.ListPropertiesByOwnerParams
 
 	in.OwnerID = strings.Trim(ctx.Param("owner_id"), "/")
-	in.Limit = int32(func() int {
-		if v, err := strconv.Atoi(ctx.Query("limit")); err == nil {
-			return v
-		}
-		return 20
-	}())
-	in.Offset = int32(func() int {
-		if v, err := strconv.Atoi(ctx.Query("offset")); err == nil {
-			return v
-		}
-		return 0
-	}())
+	in.Limit, in.Offset = query.GetLimitAndOffsetFromQuery(ctx)
 
 	if in.OwnerID == "" || strings.ToLower(in.OwnerID) == "current_user" {
 		userID := auth.GetCurrentUserId(ctx)
@@ -93,18 +103,7 @@ func (p *PropertiesController) GetPropertyByID(ctx *gin.Context) {
 // SearchProperties implements IPropertiesController.
 func (p *PropertiesController) SearchProperties(ctx *gin.Context) {
 	var in database.SearchPropertiesParams
-	in.Limit = int32(func() int {
-		if v, err := strconv.Atoi(ctx.Query("limit")); err == nil {
-			return v
-		}
-		return 20
-	}())
-	in.Offset = int32(func() int {
-		if v, err := strconv.Atoi(ctx.Query("offset")); err == nil {
-			return v
-		}
-		return 0
-	}())
+	in.Limit, in.Offset = query.GetLimitAndOffsetFromQuery(ctx)
 	in.FromPrice = ctx.Query("fromprice")
 	in.ToPrice = ctx.Query("toprice")
 
@@ -136,6 +135,19 @@ func (p *PropertiesController) UpdateProperty(ctx *gin.Context) {
 	}
 
 	response.SuccessResponse(ctx, code, out)
+}
+
+// DeletePropertie implements IPropertyController.
+func (p *PropertiesController) DeleteProperty(ctx *gin.Context) {
+	id := strings.Trim(ctx.Param("id"), "/")
+	code, err := p.PropertiesService.DeleteProperty(ctx, id)
+
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, code, nil)
 }
 
 func NewPropertiesController(propertiesService iservice.IPropertiesService) IPropertiesController {
