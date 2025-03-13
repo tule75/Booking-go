@@ -92,8 +92,9 @@ func (r *RoomsController) UpdateRoom(ctx *gin.Context) {
 		response.BadResponse(ctx, response.CannotCreatePropertyCode)
 		return
 	}
+	propertyID := strings.Trim(ctx.Param("id"), "/")
 
-	out, code, err := r.RoomsService.UpdateRoom(ctx, in)
+	out, code, err := r.RoomsService.UpdateRoom(ctx, in, propertyID)
 
 	if err != nil {
 		response.ErrorResponse(ctx, code, err.Error())

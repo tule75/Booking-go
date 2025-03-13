@@ -127,7 +127,8 @@ func (p *PropertiesController) UpdateProperty(ctx *gin.Context) {
 	userID := auth.GetCurrentUserId(ctx)
 	in.OwnerID = userID
 
-	out, code, err := p.PropertiesService.UpdateProperty(ctx, in)
+	propertyID := strings.Trim(ctx.Param("id"), "/")
+	out, code, err := p.PropertiesService.UpdateProperty(ctx, in, propertyID)
 
 	if err != nil {
 		response.ErrorResponse(ctx, code, err.Error())

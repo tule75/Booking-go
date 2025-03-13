@@ -2,3 +2,4 @@ data
 production.yaml
 .env
 local.yaml
+./kafka

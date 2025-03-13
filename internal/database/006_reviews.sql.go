@@ -142,7 +142,7 @@ func (q *Queries) SoftDeleteReview(ctx context.Context, id string) error {
 
 const updateReview = `-- name: UpdateReview :exec
 UPDATE reviews 
-SET rating = ?, comment = ?
+SET rating = COALESCE(?, rating), comment = COALESCE(?, comment)
 WHERE id = ? AND deleted_at IS NULL
 `
 

@@ -20,5 +20,4 @@ type PropertyUpdateRequest struct {
 	Location    string          `json:"location", binding:"required"`
 	Price       string          `json:"price", binding:"required"`
 	Amenities   json.RawMessage `json:"menities", binding:"required"`
-	ID          string          `json:"id", binding:"required"`
 }

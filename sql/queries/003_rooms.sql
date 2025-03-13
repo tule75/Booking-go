@@ -30,8 +30,11 @@ LIMIT ? OFFSET ?;
 
 -- name: UpdateRoom :exec
 UPDATE rooms
-SET name = ?, price = ?, max_guests = ?, is_available = ?
+SET name = COALESCE(?, name), price = COALESCE(?, price), max_guests = COALESCE(?, max_guests), is_available = COALESCE(?, is_available)
 WHERE id = ? AND deleted_at IS NULL;
 
 -- name: SoftDeleteRoom :exec
 UPDATE rooms SET deleted_at = NOW() WHERE id = ?;
+
+-- name: GetAllRoomIds :many
+SELECT id FROM rooms WHERE is_available = TRUE;

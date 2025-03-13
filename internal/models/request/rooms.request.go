@@ -14,5 +14,4 @@ type RoomUpdateModel struct {
 	MaxGuests   int    `json:"max_guests"`
 	IsAvailable bool   `json:"is_available"`
 	PropertyID  string `json:"property_id"`
-	ID          string `json:"id"`
 }

@@ -234,7 +234,7 @@ func (q *Queries) SoftDeleteProperty(ctx context.Context, id string) error {
 
 const updateProperty = `-- name: UpdateProperty :exec
 UPDATE properties
-SET name = ?, description = ?, location = ?, price = ?, amenities = ?
+SET name = COALESCE(?, name), description = COALESCE(?, description), location = COALESCE(?, location), price = COALESCE(?, price), amenities = COALESCE(?, amenities)
 WHERE id = ? AND deleted_at IS NULL
 `
 

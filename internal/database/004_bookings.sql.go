@@ -191,7 +191,7 @@ func (q *Queries) SoftDeleteBooking(ctx context.Context, id string) error {
 
 const updateBooking = `-- name: UpdateBooking :exec
 UPDATE bookings
-SET check_in = ?, check_out = ?, guests = ?, total_price = ?, status = ?
+SET check_in = COALESCE(?, check_in), check_out = COALESCE(?, check_out), guests = COALESCE(?, guests), total_price = COALESCE(?, total_price), status = COALESCE(?, status)
 WHERE id = ? AND deleted_at IS NULL
 `
 

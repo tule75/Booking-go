@@ -11,7 +11,9 @@ import (
 	constant "ecommerce_go/pkg"
 	"ecommerce_go/pkg/response"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -35,9 +37,9 @@ func (r *RoomService) CreateRoom(ctx context.Context, in requestDTO.RoomCreateMo
 	result, err := r.sqlc.CreateRoom(ctx, room)
 	if err != nil {
 		global.Logger.Error("Error creating room", zap.Error(err))
-		return "", response.CannotCreatePropertyCode, err
+		return "", response.CannotCreateRoomCode, err
 	}
-	global.Logger.Info("new User::", zap.Any("result::", result), zap.Any("value::", room))
+	global.Logger.Info("new Room::", zap.Any("result::", result), zap.Any("value::", room))
 	redis.DeleteCache(ctx, constant.PreRoomByPropertiesId, room.PropertyID)
 
 	return room.ID, response.SuccessResponseCode, nil
@@ -45,11 +47,11 @@ func (r *RoomService) CreateRoom(ctx context.Context, in requestDTO.RoomCreateMo
 
 // DeleteRoom implements iservice.IRoomService.
 func (r *RoomService) DeleteRoom(ctx context.Context, id string) (code int, err error) {
-	err = r.sqlc.SoftDeleteProperty(ctx, id)
+	err = r.sqlc.SoftDeleteRoom(ctx, id)
 
 	if err != nil {
 		global.Logger.Error("Delete Room failed", zap.Error(err))
-		return response.CannotCreatePropertyCode, err
+		return response.CannotDeleteRoomCode, err
 	}
 	global.Logger.Info("Delete Room success::", zap.Any("room id::", id))
 
@@ -71,10 +73,15 @@ func (r *RoomService) GetRoomByID(ctx context.Context, id string) (out database.
 
 	room, err = r.sqlc.GetRoomByID(ctx, id)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			fmt.Println("No property was found by ID:", id)
+			return out, response.NotFoundResponseCode, nil
+		}
 		fmt.Printf("Error getting room:: %v\n", err)
 		return out, response.CannotGetRoomByIDCode, err
 	}
 
+	go redis.CacheStore(ctx, constant.PreRoomById, id, room, 5*time.Minute)
 	return room, response.SuccessResponseCode, nil
 }
 
@@ -93,17 +100,22 @@ func (r *RoomService) GetRoomByPropertyID(ctx context.Context, in database.ListR
 	rooms, err = r.sqlc.ListRoomsByProperty(ctx, database.ListRoomsByPropertyParams{})
 
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			fmt.Println("No property was found by property ID:", in.PropertyID)
+			return out, response.NotFoundResponseCode, nil
+		}
 		fmt.Printf("Error listing rooms: %v", err)
 		return out, response.CannotListRoomByPropertyCode, err
 	}
 
+	go redis.CacheStore(ctx, constant.PreRoomByPropertiesId, query, rooms, 5*time.Minute)
 	return rooms, response.SuccessResponseCode, err
 }
 
 // UpdateRoom implements iservice.IRoomService.
-func (r *RoomService) UpdateRoom(ctx context.Context, in requestDTO.RoomUpdateModel) (string, int, error) {
+func (r *RoomService) UpdateRoom(ctx context.Context, in requestDTO.RoomUpdateModel, roomID string) (string, int, error) {
 	var updateRoom = database.UpdateRoomParams{
-		ID:          in.ID,
+		ID:          roomID,
 		Name:        sql.NullString{String: in.Name, Valid: true},
 		Price:       in.Price,
 		MaxGuests:   int32(in.MaxGuests),
@@ -118,7 +130,7 @@ func (r *RoomService) UpdateRoom(ctx context.Context, in requestDTO.RoomUpdateMo
 	global.Logger.Info("Update Room success::", zap.Any("value::", updateRoom))
 
 	defer redis.DeleteCache(ctx, constant.PreRoomByPropertiesId, in.PropertyID)
-	defer redis.DeleteCache(ctx, constant.PreRoomById, in.ID)
+	defer redis.DeleteCache(ctx, constant.PreRoomById, roomID)
 
 	return updateRoom.ID, response.SuccessResponseCode, nil
 }

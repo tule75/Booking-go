@@ -35,6 +35,33 @@ func (q *Queries) CreateRoom(ctx context.Context, arg CreateRoomParams) (sql.Res
 	)
 }
 
+const getAllRoomIds = `-- name: GetAllRoomIds :many
+SELECT id FROM rooms WHERE is_available = TRUE
+`
+
+func (q *Queries) GetAllRoomIds(ctx context.Context) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, getAllRoomIds)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		items = append(items, id)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getRoomByID = `-- name: GetRoomByID :one
 SELECT 
   rooms.id AS room_id,
@@ -146,7 +173,7 @@ func (q *Queries) SoftDeleteRoom(ctx context.Context, id string) error {
 
 const updateRoom = `-- name: UpdateRoom :exec
 UPDATE rooms
-SET name = ?, price = ?, max_guests = ?, is_available = ?
+SET name = COALESCE(?, name), price = COALESCE(?, price), max_guests = COALESCE(?, max_guests), is_available = COALESCE(?, is_available)
 WHERE id = ? AND deleted_at IS NULL
 `
 

@@ -115,7 +115,9 @@ func (q *Queries) SoftDeleteUserCard(ctx context.Context, arg SoftDeleteUserCard
 
 const updateUserCard = `-- name: UpdateUserCard :exec
 UPDATE user_cards
-SET stripe_customer_id = ?, stripe_card_id = ?, last4 = ?, brand = ?, exp_month = ?, exp_year = ?
+SET stripe_customer_id = COALESCE(?, stripe_customer_id), stripe_card_id = COALESCE(?, stripe_card_id), 
+  last4 = COALESCE(?, last4), brand = COALESCE(?, brand), 
+  exp_month = COALESCE(?, exp_month), exp_year = COALESCE(?, exp_year)
 WHERE id = ? AND user_id = ? AND deleted_at IS NULL
 `
 

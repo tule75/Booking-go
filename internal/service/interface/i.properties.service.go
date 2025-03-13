@@ -8,7 +8,7 @@ import (
 
 type IPropertiesService interface {
 	CreateProperty(ctx context.Context, in requestDTO.PropertyCreateRequest, userID string) (out string, code int, err error)
-	UpdateProperty(ctx context.Context, in requestDTO.PropertyUpdateRequest) (out string, code int, err error)
+	UpdateProperty(ctx context.Context, in requestDTO.PropertyUpdateRequest, propertyID string) (out string, code int, err error)
 	SearchProperties(ctx context.Context, in database.SearchPropertiesParams) (out []database.SearchPropertiesRow, code int, err error)
 	GetPropertiesByOwner(ctx context.Context, in database.ListPropertiesByOwnerParams) (out []database.ListPropertiesByOwnerRow, code int, err error)
 	GetProperty(ctx context.Context, id string) (out database.GetPropertyByIDRow, code int, err error)

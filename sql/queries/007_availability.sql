@@ -2,6 +2,7 @@
 INSERT INTO `availability` (id, room_id, date, is_available)
 VALUES (?, ?, ?, ?);
 
+
 -- name: GetAvailabilityByID :one
 SELECT 
   availability.id AS availability_id,
