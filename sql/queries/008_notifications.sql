@@ -22,7 +22,7 @@ SELECT
 FROM notifications
 WHERE notifications.user_id = ?
   AND notifications.deleted_at IS NULL
-  AND ( ? IS NULL OR notifications.is_read = ? )
+  AND ( sqlc.arg(is_read) IS NULL OR notifications.is_read = sqlc.arg(is_read) )
 ORDER BY notifications.created_at DESC
 LIMIT ? OFFSET ?;
 

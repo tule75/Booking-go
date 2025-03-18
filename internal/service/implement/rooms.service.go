@@ -7,12 +7,14 @@ import (
 	"ecommerce_go/internal/database"
 	requestDTO "ecommerce_go/internal/models/request"
 	iservice "ecommerce_go/internal/service/interface"
+	"ecommerce_go/internal/utils/availability"
 	"ecommerce_go/internal/utils/redis"
 	constant "ecommerce_go/pkg"
 	"ecommerce_go/pkg/response"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -41,6 +43,9 @@ func (r *RoomService) CreateRoom(ctx context.Context, in requestDTO.RoomCreateMo
 	}
 	global.Logger.Info("new Room::", zap.Any("result::", result), zap.Any("value::", room))
 	redis.DeleteCache(ctx, constant.PreRoomByPropertiesId, room.PropertyID)
+	var wait sync.WaitGroup
+
+	go availability.GenerateAvailabilityForNewRooms(ctx, r.sqlc, room.ID, &wait)
 
 	return room.ID, response.SuccessResponseCode, nil
 }

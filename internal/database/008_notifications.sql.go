@@ -79,11 +79,10 @@ LIMIT ? OFFSET ?
 `
 
 type ListNotificationsByUserParams struct {
-	UserID  string       `json:"user_id"`
-	Column2 interface{}  `json:"column_2"`
-	IsRead  sql.NullBool `json:"is_read"`
-	Limit   int32        `json:"limit"`
-	Offset  int32        `json:"offset"`
+	UserID string       `json:"user_id"`
+	IsRead sql.NullBool `json:"is_read"`
+	Limit  int32        `json:"limit"`
+	Offset int32        `json:"offset"`
 }
 
 type ListNotificationsByUserRow struct {
@@ -97,7 +96,7 @@ type ListNotificationsByUserRow struct {
 func (q *Queries) ListNotificationsByUser(ctx context.Context, arg ListNotificationsByUserParams) ([]ListNotificationsByUserRow, error) {
 	rows, err := q.db.QueryContext(ctx, listNotificationsByUser,
 		arg.UserID,
-		arg.Column2,
+		arg.IsRead,
 		arg.IsRead,
 		arg.Limit,
 		arg.Offset,

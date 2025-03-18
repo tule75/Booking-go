@@ -11,6 +11,15 @@ import (
 	"time"
 )
 
+const cancelBooking = `-- name: CancelBooking :exec
+UPDATE bookings SET status = 'Cancelled' WHERE id = ? and status <> 'completed'
+`
+
+func (q *Queries) CancelBooking(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, cancelBooking, id)
+	return err
+}
+
 const createBooking = `-- name: CreateBooking :execresult
 INSERT INTO bookings (id, user_id, property_id, room_id, check_in, check_out, guests, total_price, status)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -102,25 +111,24 @@ SELECT
   bookings.status,
   bookings.created_at
 FROM bookings
-WHERE bookings.user_id = ? 
+WHERE bookings.user_id = ?
   AND bookings.deleted_at IS NULL
-  AND ( ? IS NULL OR bookings.status = ? )
-  AND ( ? IS NULL OR bookings.check_in >= ? )
-  AND ( ? IS NULL OR bookings.check_out <= ? )
+  AND (? IS NULL OR bookings.status = ?)
+  AND (? IS NULL OR ? = FALSE OR bookings.check_in >= ?)
+  AND (? IS NULL OR ? = FALSE OR bookings.check_out <= ?)
 ORDER BY bookings.check_in DESC
 LIMIT ? OFFSET ?
 `
 
 type ListBookingsByUserParams struct {
-	UserID   string             `json:"user_id"`
-	Column2  interface{}        `json:"column_2"`
-	Status   NullBookingsStatus `json:"status"`
-	Column4  interface{}        `json:"column_4"`
-	CheckIn  time.Time          `json:"check_in"`
-	Column6  interface{}        `json:"column_6"`
-	CheckOut time.Time          `json:"check_out"`
-	Limit    int32              `json:"limit"`
-	Offset   int32              `json:"offset"`
+	UserID         string             `json:"user_id"`
+	Status         NullBookingsStatus `json:"status"`
+	FilterCheckIn  interface{}        `json:"filter_check_in"`
+	CheckIn        time.Time          `json:"check_in"`
+	FilterCheckOut interface{}        `json:"filter_check_out"`
+	CheckOut       time.Time          `json:"check_out"`
+	Limit          int32              `json:"limit"`
+	Offset         int32              `json:"offset"`
 }
 
 type ListBookingsByUserRow struct {
@@ -139,11 +147,13 @@ type ListBookingsByUserRow struct {
 func (q *Queries) ListBookingsByUser(ctx context.Context, arg ListBookingsByUserParams) ([]ListBookingsByUserRow, error) {
 	rows, err := q.db.QueryContext(ctx, listBookingsByUser,
 		arg.UserID,
-		arg.Column2,
 		arg.Status,
-		arg.Column4,
+		arg.Status,
+		arg.FilterCheckIn,
+		arg.FilterCheckIn,
 		arg.CheckIn,
-		arg.Column6,
+		arg.FilterCheckOut,
+		arg.FilterCheckOut,
 		arg.CheckOut,
 		arg.Limit,
 		arg.Offset,

@@ -11,6 +11,27 @@ import (
 	"time"
 )
 
+const checkRoomAvailability = `-- name: CheckRoomAvailability :one
+SELECT COUNT(*) = 0 AS is_available
+FROM availability
+WHERE room_id = ?
+  AND date BETWEEN ? AND ?
+  AND is_available = FALSE
+`
+
+type CheckRoomAvailabilityParams struct {
+	RoomID   string    `json:"room_id"`
+	CheckIn  time.Time `json:"check_in"`
+	CheckOut time.Time `json:"check_out"`
+}
+
+func (q *Queries) CheckRoomAvailability(ctx context.Context, arg CheckRoomAvailabilityParams) (bool, error) {
+	row := q.db.QueryRowContext(ctx, checkRoomAvailability, arg.RoomID, arg.CheckIn, arg.CheckOut)
+	var is_available bool
+	err := row.Scan(&is_available)
+	return is_available, err
+}
+
 const createAvailability = `-- name: CreateAvailability :execresult
 INSERT INTO ` + "`" + `availability` + "`" + ` (id, room_id, date, is_available)
 VALUES (?, ?, ?, ?)

@@ -97,11 +97,10 @@ LIMIT ? OFFSET ?
 `
 
 type ListPaymentsByUserParams struct {
-	UserID        string                    `json:"user_id"`
-	Column2       interface{}               `json:"column_2"`
-	PaymentMethod NullPaymentsPaymentMethod `json:"payment_method"`
-	Limit         int32                     `json:"limit"`
-	Offset        int32                     `json:"offset"`
+	UserID  string                    `json:"user_id"`
+	Payment NullPaymentsPaymentMethod `json:"payment"`
+	Limit   int32                     `json:"limit"`
+	Offset  int32                     `json:"offset"`
 }
 
 type ListPaymentsByUserRow struct {
@@ -118,8 +117,8 @@ type ListPaymentsByUserRow struct {
 func (q *Queries) ListPaymentsByUser(ctx context.Context, arg ListPaymentsByUserParams) ([]ListPaymentsByUserRow, error) {
 	rows, err := q.db.QueryContext(ctx, listPaymentsByUser,
 		arg.UserID,
-		arg.Column2,
-		arg.PaymentMethod,
+		arg.Payment,
+		arg.Payment,
 		arg.Limit,
 		arg.Offset,
 	)

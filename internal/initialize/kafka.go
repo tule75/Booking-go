@@ -80,12 +80,36 @@ func RegisterConsumer(ctx context.Context, groupID string, sqlc *database.Querie
 				case constant.KeyInsertAvailability:
 					utilsKafka.ActionInsertAvailbility(ctx, m.Value, sqlc, func(err error) {
 						if err != nil {
-							global.Logger.Error("Error processing availability", zap.Error(err))
+							global.Logger.Error(fmt.Sprintf(constant.ConsumerFailure, "Insert Availability"), zap.Error(err))
 						} else {
-							global.Logger.Info("Successfully processed availability task")
+							global.Logger.Info(fmt.Sprintf(constant.ConsumerSuccess, "Insert Availability"))
 							// Commit Kafka message to prevent reprocessing
 							if commitErr := reader.CommitMessages(ctx, m); commitErr != nil {
-								global.Logger.Error("Failed to commit Kafka message", zap.Error(commitErr))
+								global.Logger.Error(constant.FailCommitKafkaMessage, zap.Error(commitErr))
+							}
+						}
+					})
+				case constant.KeyInsertBooking:
+					utilsKafka.ActionInsertBooking(ctx, m.Value, sqlc, func(err error) {
+						if err != nil {
+							global.Logger.Error(fmt.Sprintf(constant.ConsumerFailure, "Insert Booking"), zap.Error(err))
+						} else {
+							global.Logger.Info(fmt.Sprintf(constant.ConsumerSuccess, "Insert Booking"))
+							// Commit Kafka message to prevent reprocessing
+							if commitErr := reader.CommitMessages(ctx, m); commitErr != nil {
+								global.Logger.Error(constant.FailCommitKafkaMessage, zap.Error(commitErr))
+							}
+						}
+					})
+				case constant.KeyUpdateAvailability:
+					utilsKafka.ActionInsertAvailbility(ctx, m.Value, sqlc, func(err error) {
+						if err != nil {
+							global.Logger.Error(fmt.Sprintf(constant.ConsumerFailure, "update Availability"), zap.Error(err))
+						} else {
+							global.Logger.Info(fmt.Sprintf(constant.ConsumerSuccess, "update Availability"))
+							// Commit Kafka message to prevent reprocessing
+							if commitErr := reader.CommitMessages(ctx, m); commitErr != nil {
+								global.Logger.Error(constant.FailCommitKafkaMessage, zap.Error(commitErr))
 							}
 						}
 					})

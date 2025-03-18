@@ -14,6 +14,7 @@ const (
 	CannotCreatePropertyCode     = 40002
 	CannotCreateRoomCode         = 40003
 	CannotCreateReviewCode       = 40004
+	CannotCreateBookingCode      = 40005
 	NotFoundResponseCode         = 50000
 	CannotGetPropertyByOwnerCode = 50001
 	CannotGetPropertyCode        = 50002
@@ -22,6 +23,9 @@ const (
 	CannotDeletePropertyCode     = 60001
 	CannotDeleteRoomCode         = 60002
 	CannotDeleteReviewCode       = 60003
+	CannotDeleteBookingCode      = 60004
+
+	BookingIsLocked = 70000
 )
 
 var msg = map[int]string{
@@ -38,6 +42,7 @@ var msg = map[int]string{
 	CannotCreatePropertyCode:  "Cannot Create Property",
 	CannotCreateRoomCode:      "Cannot Create Room",
 	CannotCreateReviewCode:    "Cannot Create review request",
+	CannotCreateBookingCode:   "Cannot Create booking request",
 
 	NotFoundResponseCode:         "Not Found Response",
 	CannotGetPropertyByOwnerCode: "Cannot get property by owner ID: %s",
@@ -48,4 +53,7 @@ var msg = map[int]string{
 	CannotDeletePropertyCode: "Cannot delete property by PropertyID",
 	CannotDeleteRoomCode:     "Cannot delete room by ID",
 	CannotDeleteReviewCode:   "Cannot delete review by ID",
+	CannotDeleteBookingCode:  "Cannot delete booking by ID",
+
+	BookingIsLocked: "Booking is locked",
 }

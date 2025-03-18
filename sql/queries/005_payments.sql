@@ -28,7 +28,7 @@ SELECT
 FROM payments
 WHERE payments.user_id = ? 
   AND payments.deleted_at IS NULL
-  AND ( ? IS NULL OR payments.payment_method = ? )
+  AND ( sqlc.arg(payment) IS NULL OR payments.payment_method = sqlc.arg(payment) )
 ORDER BY payments.created_at DESC
 LIMIT ? OFFSET ?;
 

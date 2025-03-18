@@ -30,11 +30,11 @@ SELECT
   bookings.status,
   bookings.created_at
 FROM bookings
-WHERE bookings.user_id = ? 
+WHERE bookings.user_id = sqlc.arg(user_id)
   AND bookings.deleted_at IS NULL
-  AND ( ? IS NULL OR bookings.status = ? )
-  AND ( ? IS NULL OR bookings.check_in >= ? )
-  AND ( ? IS NULL OR bookings.check_out <= ? )
+  AND (sqlc.arg('status') IS NULL OR bookings.status = sqlc.arg('status'))
+  AND (sqlc.arg('filter_check_in') IS NULL OR sqlc.arg('filter_check_in') = FALSE OR bookings.check_in >= sqlc.arg(check_in))
+  AND (sqlc.arg('filter_check_out') IS NULL OR sqlc.arg('filter_check_out') = FALSE OR bookings.check_out <= sqlc.arg(check_out))
 ORDER BY bookings.check_in DESC
 LIMIT ? OFFSET ?;
 
@@ -45,3 +45,6 @@ WHERE id = ? AND deleted_at IS NULL;
 
 -- name: SoftDeleteBooking :exec
 UPDATE bookings SET deleted_at = NOW() WHERE id = ?;
+
+-- name: CancelBooking :exec
+UPDATE bookings SET status = 'Cancelled' WHERE id = ? and status <> 'completed'

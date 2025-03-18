@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"ecommerce_go/global"
+	constant "ecommerce_go/pkg"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -41,4 +42,32 @@ func DeleteCache(ctx context.Context, pre string, query string) error {
 	cacheKey := fmt.Sprintf("%s:%s", pre, query)
 	_, err := global.Rdb.Del(ctx, cacheKey).Result()
 	return err
+}
+
+func CheckSoftLock(roomID, userID string, checkIn, checkOut time.Time) bool {
+	ctx := context.Background()
+	for d := checkIn; !d.After(checkOut); d = d.AddDate(0, 0, 1) {
+		lockID, err := global.Rdb.Get(ctx, fmt.Sprintf("%s:%s-%s", constant.PreSoftLock, roomID, d.Format("2006-01-02"))).Result()
+		if err == redis.Nil {
+			continue
+		} else if err != nil {
+			fmt.Println("Redis error:", err)
+			return false
+		} else if err == nil {
+			fmt.Printf("Room %s is locked by %s\n", roomID, lockID)
+			return true
+		}
+	}
+
+	return false
+}
+
+func SoftLock(roomID, userID string, checkIn, checkOut time.Time) {
+	ctx := context.Background()
+	for d := checkIn; !d.After(checkOut); d = d.AddDate(0, 0, 1) {
+		err := global.Rdb.Set(ctx, fmt.Sprintf("%s:%s-%s", constant.PreSoftLock, roomID, d.Format("2006-01-02")), roomID, 10*time.Minute)
+		if err != nil {
+			fmt.Errorf("error when soft lock room %s: %v", roomID, err)
+		}
+	}
 }

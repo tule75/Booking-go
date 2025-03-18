@@ -28,3 +28,10 @@ ORDER BY availability.date ASC;
 UPDATE availability
 SET is_available = ?
 WHERE id = ? AND deleted_at IS NULL;
+
+-- name: CheckRoomAvailability :one
+SELECT COUNT(*) = 0 AS is_available
+FROM availability
+WHERE room_id = sqlc.arg(room_id)
+  AND date BETWEEN sqlc.arg(check_in) AND sqlc.arg(check_out)
+  AND is_available = FALSE;
