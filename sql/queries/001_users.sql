@@ -10,8 +10,7 @@ SELECT
   `users`.password,
   `users`.phone,
   `users`.role,
-  `users`.created_at,
-  `users`.salt
+  `users`.created_at
 FROM `users`
 WHERE `users`.id = ? AND `users`.deleted_at IS NULL;
 

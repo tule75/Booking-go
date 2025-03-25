@@ -26,14 +26,14 @@ type PropertiesController struct {
 }
 
 // CreateProperty implements IPropertiesController.
-// Register implements IPropertiesController.
-// Register godoc
+// Create implements IPropertiesController.
+// Create godoc
 // @Summary      Create a new property
 // @Description  Create a new property
 // @Tags         properties management
 // @Accept       json
 // @Produce      json
-// @Param        payload body requestDTO.PropertyCreateRequest true "param"
+// @Param        payload body requestDTO.PropertyCreateRequest true "payload"
 // @Success      200  {object}  response.ResponseData
 // @Router       /properties [POST]
 func (p *PropertiesController) CreateProperty(ctx *gin.Context) {
@@ -56,16 +56,18 @@ func (p *PropertiesController) CreateProperty(ctx *gin.Context) {
 }
 
 // GetPropertiesByOwnerID implements IPropertiesController.
-// Register implements IPropertiesController.
-// Register godoc
+// Get implements IPropertiesController.
+// Get godoc
 // @Summary      GetPropertiesByOwnerID
 // @Description  GetPropertiesByOwnerID
 // @Tags         properties management
 // @Accept       json
 // @Produce      json
-// @Param        payload body requestDTO.PropertyCreateRequest true "payload"
+// @Param        id path string true "Owner ID"
+// @Param        limit query int false "Limit the number of rooms affected (default: 20)"
+// @Param        offset query int false "Offset for starting position (default: 0)"
 // @Success      200  {object}  response.ResponseData
-// @Router       /properties/owner/:id [GET]
+// @Router       /properties/owner/{id} [GET]
 func (p *PropertiesController) GetPropertiesByOwnerID(ctx *gin.Context) {
 	var in database.ListPropertiesByOwnerParams
 
@@ -88,6 +90,16 @@ func (p *PropertiesController) GetPropertiesByOwnerID(ctx *gin.Context) {
 }
 
 // GetPropertyByID implements IPropertiesController.
+// Get implements IPropertiesController.
+// Get godoc
+// @Summary      GetPropertiesByID
+// @Description  GetPropertiesByID
+// @Tags         properties management
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "Owner ID"
+// @Success      200  {object}  response.ResponseData
+// @Router       /properties/{id} [GET]
 func (p *PropertiesController) GetPropertyByID(ctx *gin.Context) {
 	var id = strings.Trim(ctx.Param("id"), "/")
 
@@ -101,11 +113,23 @@ func (p *PropertiesController) GetPropertyByID(ctx *gin.Context) {
 }
 
 // SearchProperties implements IPropertiesController.
+// Get implements IPropertiesController.
+// Get godoc
+// @Summary      Search Properties
+// @Description  Search Properties with filter
+// @Tags         properties management
+// @Accept       json
+// @Produce      json
+// @Param        payload body database.SearchPropertiesParams true "param"
+// @Success      200  {object}  response.ResponseData
+// @Router       /properties/filter [POST]
 func (p *PropertiesController) SearchProperties(ctx *gin.Context) {
 	var in database.SearchPropertiesParams
-	in.Limit, in.Offset = query.GetLimitAndOffsetFromQuery(ctx)
-	in.FromPrice = ctx.Query("fromprice")
-	in.ToPrice = ctx.Query("toprice")
+
+	if err := ctx.ShouldBindJSON(&in); err != nil {
+		response.BadResponse(ctx, response.CannotCreatePropertyCode)
+		return
+	}
 
 	out, code, err := p.PropertiesService.SearchProperties(ctx, in)
 
@@ -117,6 +141,17 @@ func (p *PropertiesController) SearchProperties(ctx *gin.Context) {
 }
 
 // UpdateProperty implements IPropertiesController.
+// Update implements IPropertiesController.
+// Update godoc
+// @Summary      Search Properties
+// @Description  Search Properties with filter
+// @Tags         properties management
+// @Accept       json
+// @Produce      json
+// @Param 		id path string true "ID"
+// @Param        payload body requestDTO.PropertyUpdateRequest true "param"
+// @Success      200  {object}  response.ResponseData
+// @Router       /properties/{id} [PUT]
 func (p *PropertiesController) UpdateProperty(ctx *gin.Context) {
 	var in requestDTO.PropertyUpdateRequest
 
@@ -139,6 +174,16 @@ func (p *PropertiesController) UpdateProperty(ctx *gin.Context) {
 }
 
 // DeletePropertie implements IPropertyController.
+// Delete implements IPropertiesController.
+// Delete godoc
+// @Summary      Delete Properties
+// @Description  Delete Properties by its unique ID
+// @Tags         properties management
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "ID"
+// @Success      200  {object}  response.ResponseData
+// @Router       /properties/{id} [DELETE]
 func (p *PropertiesController) DeleteProperty(ctx *gin.Context) {
 	id := strings.Trim(ctx.Param("id"), "/")
 	code, err := p.PropertiesService.DeleteProperty(ctx, id)

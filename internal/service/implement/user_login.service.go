@@ -34,7 +34,7 @@ func (ul *UserLogin) Register(ctx context.Context, request *requestDTO.RegisterR
 	fmt.Printf("Email after hashing: %s\n", hashEmail)
 
 	// 2. check email valid
-	isExist, _ := ul.sqlc.CheckUserExists(ctx, hashEmail)
+	isExist, _ := ul.sqlc.CheckUserExists(ctx, request.Email)
 
 	if isExist > 0 {
 		return response.ExistEmailResponseCode, nil

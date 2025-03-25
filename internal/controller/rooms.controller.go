@@ -24,6 +24,16 @@ type RoomsController struct {
 }
 
 // CreateRoom implements IRoomController.
+// Create implements IRoomController.
+// Create godoc
+// @Summary      Create Room
+// @Description  Create Room
+// @Tags         Room management
+// @Accept       json
+// @Produce      json
+// @Param        payload body requestDTO.RoomCreateModel true "payload"
+// @Success      200  {object}  response.ResponseData
+// @Router       /rooms [POST]
 func (r *RoomsController) CreateRoom(ctx *gin.Context) {
 	var in requestDTO.RoomCreateModel
 
@@ -43,6 +53,16 @@ func (r *RoomsController) CreateRoom(ctx *gin.Context) {
 }
 
 // DeleteRoom implements IRoomController.
+// Delete implements IRoomController.
+// Delete godoc
+// @Summary      Delete a room by ID
+// @Description  Deletes a room from the system using its unique ID.
+// @Tags         Room management
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "Room ID"
+// @Success      200 {object} response.ResponseData "Room deleted successfully"
+// @Router       /rooms/{id} [delete]
 func (r *RoomsController) DeleteRoom(ctx *gin.Context) {
 	id := strings.Trim(ctx.Param("id"), "/")
 	code, err := r.RoomsService.DeleteRoom(ctx, id)
@@ -56,6 +76,16 @@ func (r *RoomsController) DeleteRoom(ctx *gin.Context) {
 }
 
 // GetRoomById implements IRoomController.
+// Get implements IRoomController.
+// Get godoc
+// @Summary      Get a room by ID
+// @Description  Get a room from the system using its unique ID.
+// @Tags         Room management
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "Room ID"
+// @Success      200 {object} response.ResponseData
+// @Router       /rooms/{id} [GET]
 func (r *RoomsController) GetRoomById(ctx *gin.Context) {
 	id := strings.Trim(ctx.Param("id"), "/")
 	out, code, err := r.RoomsService.GetRoomByID(ctx, id)
@@ -70,6 +100,18 @@ func (r *RoomsController) GetRoomById(ctx *gin.Context) {
 }
 
 // ListRoomsByProperty implements IRoomController.
+// Get implements IRoomController.
+// Get godoc
+// @Summary      Get rooms by property ID
+// @Description  Get rooms from the system using property unique ID.
+// @Tags         Room management
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "Property ID"
+// @Param        limit query int false "Limit the number of rooms affected (default: 20)"
+// @Param        offset query int false "Offset for starting position (default: 0)"
+// @Success      200 {object} response.ResponseData
+// @Router       /rooms/property/{id} [GET]
 func (r *RoomsController) ListRoomsByProperty(ctx *gin.Context) {
 	var in database.ListRoomsByPropertyParams
 	in.PropertyID = strings.Trim(ctx.Param("id"), "/")
@@ -85,6 +127,17 @@ func (r *RoomsController) ListRoomsByProperty(ctx *gin.Context) {
 }
 
 // UpdateRoom implements IRoomController.
+// Update implements IRoomController.
+// Update godoc
+// @Summary      Update room by ID
+// @Description  Update rooms from the system using its unique ID.
+// @Tags         Room management
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "Property ID"
+// @Param        payload body requestDTO.RoomUpdateModel true "payload"
+// @Success      200 {object} response.ResponseData
+// @Router       /rooms/{id} [PUT]
 func (r *RoomsController) UpdateRoom(ctx *gin.Context) {
 	var in requestDTO.RoomUpdateModel
 

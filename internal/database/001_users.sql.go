@@ -97,8 +97,7 @@ SELECT
   ` + "`" + `users` + "`" + `.password,
   ` + "`" + `users` + "`" + `.phone,
   ` + "`" + `users` + "`" + `.role,
-  ` + "`" + `users` + "`" + `.created_at,
-  ` + "`" + `users` + "`" + `.salt
+  ` + "`" + `users` + "`" + `.created_at
 FROM ` + "`" + `users` + "`" + `
 WHERE ` + "`" + `users` + "`" + `.id = ? AND ` + "`" + `users` + "`" + `.deleted_at IS NULL
 `
@@ -111,7 +110,6 @@ type GetUserByIDRow struct {
 	Phone     sql.NullString `json:"phone"`
 	Role      NullUsersRole  `json:"role"`
 	CreatedAt sql.NullTime   `json:"created_at"`
-	Salt      string         `json:"salt"`
 }
 
 func (q *Queries) GetUserByID(ctx context.Context, id string) (GetUserByIDRow, error) {
@@ -125,7 +123,6 @@ func (q *Queries) GetUserByID(ctx context.Context, id string) (GetUserByIDRow, e
 		&i.Phone,
 		&i.Role,
 		&i.CreatedAt,
-		&i.Salt,
 	)
 	return i, err
 }

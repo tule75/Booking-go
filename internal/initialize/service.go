@@ -12,4 +12,5 @@ func InitServices(queries *database.Queries) {
 	iservice.InitProperty(service.NewPropertiesService(queries))
 	iservice.InitRoom(service.NewRoomService(queries))
 	iservice.InitReview(service.NewReviewService(queries))
+	iservice.InitBooking(service.NewBookingService(queries))
 }

@@ -29,10 +29,10 @@ func (ps *PropertiesService) CreateProperty(ctx context.Context, in requestDTO.P
 		ID:          uuid.New().String(),
 		OwnerID:     userID,
 		Name:        in.Name,
-		Description: in.Description,
+		Description: sql.NullString{String: in.Description, Valid: in.Description != ""},
 		Location:    in.Location,
 		Price:       in.Price,
-		Amenities:   in.Amenities,
+		Amenities:   json.RawMessage(in.Amenities),
 	}
 
 	result, err := ps.sqlc.CreateProperty(ctx, newProperty)
@@ -44,7 +44,6 @@ func (ps *PropertiesService) CreateProperty(ctx context.Context, in requestDTO.P
 
 	defer redis.DeleteCache(ctx, constant.PrePropertiesOwner, userID)
 	return newProperty.ID, response.SuccessResponseCode, nil
-
 }
 
 // GetPropertiesByOwner implements iservice.IPropertiesService.
@@ -141,10 +140,10 @@ func (ps *PropertiesService) UpdateProperty(ctx context.Context, in requestDTO.P
 	var updateProperty = database.UpdatePropertyParams{
 		ID:          propertyID,
 		Name:        in.Name,
-		Description: in.Description,
+		Description: sql.NullString{String: in.Description, Valid: in.Description != ""},
 		Location:    in.Location,
 		Price:       in.Price,
-		Amenities:   in.Amenities,
+		Amenities:   json.RawMessage(in.Amenities),
 	}
 
 	err = ps.sqlc.UpdateProperty(ctx, updateProperty)

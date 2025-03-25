@@ -4,6 +4,7 @@ import (
 	"ecommerce_go/internal/controller"
 	"ecommerce_go/internal/middleware"
 	iservice "ecommerce_go/internal/service/interface"
+	constant "ecommerce_go/pkg"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,20 +14,20 @@ type PropertyRouter struct {
 
 func (r *PropertyRouter) InitPropertiesRouter(Router *gin.RouterGroup) {
 	uc := controller.NewPropertiesController(iservice.GetProperty())
-	userPublicRouter := Router.Group("/properties")
+	propertyPublicRouter := Router.Group("/properties")
 	{
-		userPublicRouter.GET("/owner/:id", uc.GetPropertiesByOwnerID)
-		userPublicRouter.GET("/:id", uc.GetPropertyByID)
-		userPublicRouter.POST("/filter", uc.SearchProperties)
+		propertyPublicRouter.GET("/owner/:id", uc.GetPropertiesByOwnerID)
+		propertyPublicRouter.GET("/:id", uc.GetPropertyByID)
+		propertyPublicRouter.POST("/filter", uc.SearchProperties)
 	}
 
-	userPrivateRouter := Router.Group("/users")
-	userPrivateRouter.Use(middleware.AuthenticationMiddleware())
-	userPrivateRouter.Use(middleware.Authorization([]string{"ADMIN", "HOST"}))
+	propertyPrivateRouter := Router.Group("/properties")
+	propertyPrivateRouter.Use(middleware.AuthenticationMiddleware())
+	propertyPrivateRouter.Use(middleware.Authorization([]string{constant.RoleAdmin, constant.RoleHost}))
 	{
-		userPrivateRouter.GET("/owner/current_user", uc.GetPropertiesByOwnerID)
-		userPrivateRouter.POST("/", uc.CreateProperty)
-		userPrivateRouter.PUT("/", uc.UpdateProperty)
-		userPrivateRouter.DELETE("/", uc.DeleteProperty)
+		propertyPrivateRouter.GET("/owner/current_property", uc.GetPropertiesByOwnerID)
+		propertyPrivateRouter.POST("/", uc.CreateProperty)
+		propertyPrivateRouter.PUT("/:id", uc.UpdateProperty)
+		propertyPrivateRouter.DELETE("/", uc.DeleteProperty)
 	}
 }

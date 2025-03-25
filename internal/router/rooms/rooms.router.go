@@ -4,6 +4,7 @@ import (
 	"ecommerce_go/internal/controller"
 	"ecommerce_go/internal/middleware"
 	iservice "ecommerce_go/internal/service/interface"
+	constant "ecommerce_go/pkg"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,20 +12,20 @@ import (
 type RoomsRouter struct {
 }
 
-func (r *RoomsRouter) InitPropertiesRouter(Router *gin.RouterGroup) {
+func (r *RoomsRouter) InitRoomsRouter(Router *gin.RouterGroup) {
 	rc := controller.NewRoomController(iservice.GetRoom())
-	userPublicRouter := Router.Group("/rooms")
+	roomPublicRouter := Router.Group("/rooms")
 	{
-		userPublicRouter.GET("/property/:id", rc.ListRoomsByProperty)
-		userPublicRouter.GET("/:id", rc.GetRoomById)
+		roomPublicRouter.GET("/property/:id", rc.ListRoomsByProperty)
+		roomPublicRouter.GET("/:id", rc.GetRoomById)
 	}
 
-	userPrivateRouter := Router.Group("/users")
-	userPrivateRouter.Use(middleware.AuthenticationMiddleware())
-	userPrivateRouter.Use(middleware.Authorization([]string{"ADMIN", "HOST"}))
+	roomPrivateRouter := Router.Group("/rooms")
+	roomPrivateRouter.Use(middleware.AuthenticationMiddleware())
+	roomPrivateRouter.Use(middleware.Authorization([]string{constant.RoleAdmin, constant.RoleHost}))
 	{
-		userPrivateRouter.POST("/", rc.CreateRoom)
-		userPrivateRouter.PUT("/", rc.UpdateRoom)
-		userPrivateRouter.DELETE("/", rc.DeleteRoom)
+		roomPrivateRouter.POST("/", rc.CreateRoom)
+		roomPrivateRouter.PUT("/:id", rc.UpdateRoom)
+		roomPrivateRouter.DELETE("/", rc.DeleteRoom)
 	}
 }

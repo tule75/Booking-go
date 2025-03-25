@@ -14,7 +14,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -30,22 +29,25 @@ func (r *RoomService) CreateRoom(ctx context.Context, in requestDTO.RoomCreateMo
 	var room = database.CreateRoomParams{
 		ID:          uuid.New().String(),
 		PropertyID:  in.PropertyID,
-		Name:        sql.NullString{String: in.Name, Valid: true},
+		Name:        sql.NullString{String: in.Name, Valid: in.Name != ""}, // Kiểm tra rỗng
 		Price:       in.Price,
 		MaxGuests:   int32(in.MaxGuests),
-		IsAvailable: sql.NullBool{Bool: in.IsAvailable, Valid: true},
+		IsAvailable: sql.NullBool{Bool: in.IsAvailable, Valid: true}, // Giả sử luôn có giá trị
 	}
 
-	result, err := r.sqlc.CreateRoom(ctx, room)
+	_, err := r.sqlc.CreateRoom(ctx, room) // Bỏ result nếu không dùng
 	if err != nil {
 		global.Logger.Error("Error creating room", zap.Error(err))
 		return "", response.CannotCreateRoomCode, err
 	}
-	global.Logger.Info("new Room::", zap.Any("result::", result), zap.Any("value::", room))
-	redis.DeleteCache(ctx, constant.PreRoomByPropertiesId, room.PropertyID)
-	var wait sync.WaitGroup
 
-	go availability.GenerateAvailabilityForNewRooms(ctx, r.sqlc, room.ID, &wait)
+	global.Logger.Info("New Room created", zap.Any("room", room))
+	if err := redis.DeleteCache(ctx, constant.PreRoomByPropertiesId, room.PropertyID); err != nil {
+		global.Logger.Warn("Failed to delete cache", zap.Error(err)) // Log lỗi, không fail hàm
+	}
+
+	// Chạy bất đồng bộ, không cần WaitGroup nếu không đợi
+	go availability.GenerateAvailabilityForNewRooms(ctx, r.sqlc, room.ID)
 
 	return room.ID, response.SuccessResponseCode, nil
 }

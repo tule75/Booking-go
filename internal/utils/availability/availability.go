@@ -6,15 +6,14 @@ import (
 	"ecommerce_go/internal/database"
 	"ecommerce_go/internal/utils/kafka"
 	constant "ecommerce_go/pkg"
-	"sync"
 	"time"
 
 	"go.uber.org/zap"
 )
 
 // Generate availability cho các phòng mới từ nay đến cuối 3 tháng sau
-func GenerateAvailabilityForNewRooms(ctx context.Context, sqlc *database.Queries, roomID string, wait *sync.WaitGroup) error {
-	defer wait.Done()
+func GenerateAvailabilityForNewRooms(ctx context.Context, sqlc *database.Queries, roomID string) error {
+	//defer wait.Done()
 	now := time.Now()
 	endDate := now.AddDate(0, 3, 0) // 3 tháng sau
 	firstDay := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)

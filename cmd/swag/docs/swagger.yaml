@@ -1,5 +1,16 @@
 basePath: /v1/2025
 definitions:
+  database.SearchPropertiesParams:
+    properties:
+      from_price:
+        type: string
+      limit:
+        type: integer
+      offset:
+        type: integer
+      to_price:
+        type: string
+    type: object
   requestDTO.LoginRequestModel:
     properties:
       email:
@@ -8,12 +19,74 @@ definitions:
         type: string
     type: object
   requestDTO.PropertyCreateRequest:
+    properties:
+      amenities:
+        type: string
+      description:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+    required:
+    - amenities
+    - location
+    - name
+    - price
+    type: object
+  requestDTO.PropertyUpdateRequest:
+    properties:
+      amenities:
+        type: string
+      description:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+      price:
+        type: string
+    required:
+    - amenities
+    - location
+    - name
+    - price
     type: object
   requestDTO.RegisterRequestModel:
     properties:
       code:
         type: string
       email:
+        type: string
+    type: object
+  requestDTO.RoomCreateModel:
+    properties:
+      is_available:
+        type: boolean
+      max_guests:
+        type: integer
+      name:
+        type: string
+      price:
+        type: string
+      property_id:
+        type: string
+    type: object
+  requestDTO.RoomUpdateModel:
+    properties:
+      is_available:
+        type: boolean
+      max_guests:
+        type: integer
+      name:
+        type: string
+      price:
+        type: string
+      property_id:
         type: string
     type: object
   requestDTO.UserCreateRequestModel:
@@ -75,7 +148,7 @@ paths:
       - application/json
       description: Create a new property
       parameters:
-      - description: param
+      - description: payload
         in: body
         name: payload
         required: true
@@ -91,18 +164,114 @@ paths:
       summary: Create a new property
       tags:
       - properties management
-  /properties/owner/:id:
+  /properties/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Properties by its unique ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Delete Properties
+      tags:
+      - properties management
+    get:
+      consumes:
+      - application/json
+      description: GetPropertiesByID
+      parameters:
+      - description: Owner ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: GetPropertiesByID
+      tags:
+      - properties management
+    put:
+      consumes:
+      - application/json
+      description: Search Properties with filter
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: param
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestDTO.PropertyUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Search Properties
+      tags:
+      - properties management
+  /properties/filter:
+    post:
+      consumes:
+      - application/json
+      description: Search Properties with filter
+      parameters:
+      - description: param
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/database.SearchPropertiesParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Search Properties
+      tags:
+      - properties management
+  /properties/owner/{id}:
     get:
       consumes:
       - application/json
       description: GetPropertiesByOwnerID
       parameters:
-      - description: payload
-        in: body
-        name: payload
+      - description: Owner ID
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/requestDTO.PropertyCreateRequest'
+        type: string
+      - description: 'Limit the number of rooms affected (default: 20)'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Offset for starting position (default: 0)'
+        in: query
+        name: offset
+        type: integer
       produces:
       - application/json
       responses:
@@ -113,6 +282,124 @@ paths:
       summary: GetPropertiesByOwnerID
       tags:
       - properties management
+  /rooms:
+    post:
+      consumes:
+      - application/json
+      description: Create Room
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestDTO.RoomCreateModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Create Room
+      tags:
+      - Room management
+  /rooms/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a room from the system using its unique ID.
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Room deleted successfully
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Delete a room by ID
+      tags:
+      - Room management
+    get:
+      consumes:
+      - application/json
+      description: Get a room from the system using its unique ID.
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Get a room by ID
+      tags:
+      - Room management
+    put:
+      consumes:
+      - application/json
+      description: Update rooms from the system using its unique ID.
+      parameters:
+      - description: Property ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestDTO.RoomUpdateModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Update room by ID
+      tags:
+      - Room management
+  /rooms/property/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get rooms from the system using property unique ID.
+      parameters:
+      - description: Property ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Limit the number of rooms affected (default: 20)'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Offset for starting position (default: 0)'
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Get rooms by property ID
+      tags:
+      - Room management
   /users/create-password:
     post:
       consumes:

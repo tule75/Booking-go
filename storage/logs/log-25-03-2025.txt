@@ -1,0 +1,6 @@
+{"level":"INFO","Time":"2025-03-25T12:45:17.851+0700","caller":"initialize/run.go:21","msg":"Config ok roif: ","Ok":"success"}
+{"level":"ERROR","Time":"2025-03-25T12:45:17.872+0700","caller":"initialize/mysql.go:16","msg":"Initial mysql connection error","error":"invalid connection","stacktrace":"ecommerce_go/internal/initialize.checkErrorPanic\n\tD:/Golang/Ecommerce_Go/internal/initialize/mysql.go:16\necommerce_go/internal/initialize.InitMySQL\n\tD:/Golang/Ecommerce_Go/internal/initialize/mysql.go:25\necommerce_go/internal/initialize.Run\n\tD:/Golang/Ecommerce_Go/internal/initialize/run.go:22\nmain.main\n\tD:/Golang/Ecommerce_Go/cmd/server/main.go:35\nruntime.main\n\tC:/Program Files/Go/src/runtime/proc.go:272"}
+{"level":"INFO","Time":"2025-03-25T12:45:40.954+0700","caller":"initialize/run.go:21","msg":"Config ok roif: ","Ok":"success"}
+{"level":"INFO","Time":"2025-03-25T12:45:40.971+0700","caller":"initialize/mysql.go:27","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-25T12:45:41.257+0700","caller":"initialize/mysqlc.go:25","msg":"Initializing MySQL Successfully"}
+{"level":"INFO","Time":"2025-03-25T12:45:41.487+0700","caller":"initialize/redis.go:51","msg":"redis get result: ","foo":"bar"}
